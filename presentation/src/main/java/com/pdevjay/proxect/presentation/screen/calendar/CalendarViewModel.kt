@@ -1,0 +1,82 @@
+package com.pdevjay.proxect.presentation.screen.calendar
+
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.temporal.TemporalAdjusters
+import javax.inject.Inject
+
+@HiltViewModel
+class CalendarViewModel @Inject constructor() : ViewModel() {
+
+    private val _state = MutableStateFlow(CalendarState())
+    val state: StateFlow<CalendarState> = _state
+
+    init {
+        generateMonthDays(_state.value.yearMonth)
+    }
+
+    private fun generateMonthDays(yearMonth: YearMonth) {
+        _state.update { it.copy(yearMonth = yearMonth) }
+
+        val today = LocalDate.now()
+        val firstDayOfMonth = yearMonth.atDay(1)
+        val startOfCalendar =
+            firstDayOfMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+
+        // 무조건 6주 = 42일
+        val totalDays = 42
+        val days = mutableListOf<CalendarDay>()
+
+        var current = startOfCalendar
+        repeat(totalDays) {
+            val isCurrentMonth = current.month == yearMonth.month
+            val isToday = current == today
+            days.add(CalendarDay(current, isCurrentMonth, isToday))
+            current = current.plusDays(1)
+        }
+        _state.update { it.copy(days = days) }
+
+    }
+
+
+    fun goToNextMonth() {
+        generateMonthDays(_state.value.yearMonth.plusMonths(1))
+    }
+
+    fun goToPreviousMonth() {
+        generateMonthDays(_state.value.yearMonth.minusMonths(1))
+    }
+
+    fun selectDate(date: LocalDate) {
+        _state.update { it.copy(selectedDate = date, isModalVisible = true) }
+    }
+
+    fun dismissModal() {
+        _state.update {
+            it.copy(isModalVisible = false)
+        }
+    }
+
+}
+
+
+data class CalendarDay(
+    val date: LocalDate,
+    val isCurrentMonth: Boolean,
+    val isToday: Boolean
+)
+
+data class CalendarState(
+    val yearMonth: YearMonth = YearMonth.now(),
+    val days: List<CalendarDay> = emptyList(),
+    val selectedDate: LocalDate? = null,
+    val isModalVisible:Boolean = false,
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
