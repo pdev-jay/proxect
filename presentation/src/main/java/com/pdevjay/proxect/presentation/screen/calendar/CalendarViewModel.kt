@@ -1,6 +1,8 @@
 package com.pdevjay.proxect.presentation.screen.calendar
 
 import androidx.lifecycle.ViewModel
+import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
+import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,18 +67,3 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
 
 }
 
-
-data class CalendarDay(
-    val date: LocalDate,
-    val isCurrentMonth: Boolean,
-    val isToday: Boolean
-)
-
-data class CalendarState(
-    val yearMonth: YearMonth = YearMonth.now(),
-    val days: List<CalendarDay> = emptyList(),
-    val selectedDate: LocalDate? = null,
-    val isModalVisible:Boolean = false,
-    val isLoading: Boolean = false,
-    val error: String? = null
-)

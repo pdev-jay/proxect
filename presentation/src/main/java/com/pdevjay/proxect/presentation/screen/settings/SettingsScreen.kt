@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen
+package com.pdevjay.proxect.presentation.screen.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,10 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
-
 @Composable
-fun HomeScreen() {
+fun SettingsScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("홈 화면")
+        Text("세팅 화면")
     }
 }

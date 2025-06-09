@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen
+package com.pdevjay.proxect.presentation.screen.lists
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,8 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun SettingsScreen() {
+fun ListScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("세팅 화면")
+        Text("목록 화면")
     }
 }

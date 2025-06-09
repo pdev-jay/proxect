@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class GetProjectsUseCase(
     private val repository: ProjectRepository
 ) {
-    operator fun invoke(): Flow<List<Project>> {
+    suspend operator fun invoke(): List<Project> {
         return repository.getAllProjects()
     }
 }

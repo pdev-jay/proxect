@@ -1,12 +1,18 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 
     id("com.google.devtools.ksp")
-
+    kotlin("plugin.serialization")
 }
+val properties = Properties()
+properties.load(FileInputStream("local.properties"))
 
 android {
+
     namespace = "com.pdevjay.proxect.data"
     compileSdk = 35
 
@@ -15,6 +21,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "SUPABASE_URL", "\"${properties.getProperty("SUPABASE_URL")}\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"${properties.getProperty("SUPABASE_KEY")}\"")
     }
 
     buildTypes {
@@ -33,6 +42,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        buildConfig = true
+    }
+
 }
 
 dependencies {
@@ -62,5 +75,18 @@ dependencies {
     ksp("androidx.hilt:hilt-compiler:1.2.0")
 
     implementation(project(":domain"))
+
+    // supabase
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.4"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:realtime-kt")
+
+    // serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+
+    // ktor
+    val KTOR_VERSION="3.1.3"
+    implementation("io.ktor:ktor-client-okhttp:$KTOR_VERSION")
 
 }

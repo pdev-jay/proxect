@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen.calendar
+package com.pdevjay.proxect.presentation.screen.calendar.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
+import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 
 @Composable
 fun CalendarDialog(
@@ -71,7 +73,7 @@ fun CalendarDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .dashedBorder(cornerRadius = 8.dp)
+                        .dashedRectBorder(cornerRadius = 8.dp)
                         .clickable { }
                         .padding(8.dp),
                     contentAlignment = Alignment.Center
@@ -90,7 +92,7 @@ fun CalendarDialog(
     }
 }
 
-fun Modifier.dashedBorder(
+fun Modifier.dashedRectBorder(
     strokeWidth: Dp = 1.dp,
     color: Color = Color.Gray,
     dashLengths: FloatArray = floatArrayOf(20f, 10f), // [dash, gap]

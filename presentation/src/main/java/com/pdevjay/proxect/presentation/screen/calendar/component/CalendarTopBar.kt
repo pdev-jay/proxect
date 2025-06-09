@@ -1,8 +1,9 @@
-package com.pdevjay.proxect.presentation.screen.calendar
+package com.pdevjay.proxect.presentation.screen.calendar.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,15 +22,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
+import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 
 @Composable
 fun CalendarTopBar(
+    padding: PaddingValues,
     viewModel: CalendarViewModel,
     calendarState: CalendarState
 ) {
     Column(
         modifier = Modifier
             .background(Color(0xFFF3F3FA))
+            .padding(padding)
     ) {
         Row(
             modifier = Modifier

@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen.calendar
+package com.pdevjay.proxect.presentation.screen.calendar.component
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
@@ -24,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
+import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
