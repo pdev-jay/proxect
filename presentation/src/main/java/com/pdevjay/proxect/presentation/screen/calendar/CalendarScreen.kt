@@ -10,13 +10,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pdevjay.proxect.presentation.screen.add.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarDialog
 import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarGrid
 import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarTopBar
+import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarWeekGrid
 
 @Composable
-fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel()) {
+fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), projectViewModel: ProjectViewModel = hiltViewModel()) {
     val calendarState by viewModel.state.collectAsState()
+    val projects by projectViewModel.projects.collectAsState()
 
     val padding = PaddingValues(4.dp)
     if (calendarState.isModalVisible && calendarState.selectedDate != null) {
@@ -28,7 +31,9 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel()) {
         modifier = Modifier.fillMaxSize()
     ){
         CalendarTopBar(padding, viewModel, calendarState)
-        CalendarGrid(padding, calendarState, viewModel)
+        CalendarWeekGrid(calendarState, projects, onDayClick = { calendarDay ->
+            viewModel.selectDate(calendarDay.date)
+        })
     }
 }
 

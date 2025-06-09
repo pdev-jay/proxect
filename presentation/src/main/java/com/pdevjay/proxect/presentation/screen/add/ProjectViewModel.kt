@@ -24,23 +24,19 @@ class ProjectViewModel @Inject constructor(
     private val _projects = MutableStateFlow<List<Project>>(emptyList())
     val projects: StateFlow<List<Project>> = _projects.asStateFlow()
 
+    init{
+        loadProjects()
+    }
+
     fun loadProjects() {
         viewModelScope.launch {
             _projects.value = useCases.getProjects()
         }
     }
 
-    fun addProject(title: String) {
-        val newProject = Project(
-            id = UUID.randomUUID().toString(),
-            name = title,
-            description = "", // 간단히 비워두기
-            startDate = System.currentTimeMillis(),
-            endDate = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000 // 일주일 뒤
-        )
-
+    fun addProject(project: Project) {
         viewModelScope.launch {
-            useCases.insertProject(newProject)
+            useCases.insertProject(project)
             loadProjects()
         }
     }
