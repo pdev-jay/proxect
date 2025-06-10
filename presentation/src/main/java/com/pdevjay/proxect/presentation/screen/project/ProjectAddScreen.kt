@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen.add
+package com.pdevjay.proxect.presentation.screen.project
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

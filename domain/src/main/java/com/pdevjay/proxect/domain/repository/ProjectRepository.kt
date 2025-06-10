@@ -7,4 +7,5 @@ interface ProjectRepository {
     suspend fun getAllProjects(): List<Project>
     suspend fun insertProject(project: Project)
     suspend fun deleteProject(id: String)
+    suspend fun updateProject(project: Project)
 }

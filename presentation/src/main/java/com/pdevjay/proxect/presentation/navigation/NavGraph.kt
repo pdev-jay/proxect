@@ -5,13 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.pdevjay.proxect.presentation.screen.add.ProjectAddScreen
-import com.pdevjay.proxect.presentation.screen.add.ProjectViewModel
+import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.home.HomeScreen
 import com.pdevjay.proxect.presentation.screen.lists.ListScreen
 import com.pdevjay.proxect.presentation.screen.settings.SettingsScreen
 import com.pdevjay.proxect.presentation.screen.calendar.CalendarScreen
-import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
 
 
 @Composable

@@ -16,9 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.presentation.navigation.BottomNavItem.Companion.items
-import com.pdevjay.proxect.presentation.screen.add.ProjectViewModel
-import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
+import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.common.ProjectDialog
@@ -58,6 +56,9 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
             },
             onDelete = {
                 projectViewModel.deleteProject(it)
+            },
+            onUpdate = {
+                projectViewModel.updateProject(it)
             }
         )
 

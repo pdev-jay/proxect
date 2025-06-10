@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 enum class DialogContentType {
-    ProjectList, ProjectDetail
+    ProjectList, ProjectDetail, EditProject
 }
 
 data class CalendarState(

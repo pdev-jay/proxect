@@ -6,6 +6,7 @@ import com.pdevjay.proxect.domain.usecase.DeleteProjectUseCase
 import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.InsertProjectUseCase
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
+import com.pdevjay.proxect.domain.usecase.UpdateProjectUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,7 +32,8 @@ object DataModule {
         return ProjectUseCases(
             getProjects = GetProjectsUseCase(repository),
             insertProject = InsertProjectUseCase(repository),
-            deleteProject = DeleteProjectUseCase(repository)
+            deleteProject = DeleteProjectUseCase(repository),
+            updateProject = UpdateProjectUseCase(repository)
         )
     }
 }

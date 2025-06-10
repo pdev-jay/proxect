@@ -36,4 +36,10 @@ class ProjectRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun updateProject(project: Project) {
+        val dto = project.toDto()
+        supabase.from("projects").upsert(dto)
+
+    }
 }

@@ -1,14 +1,7 @@
 package com.pdevjay.proxect.presentation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,9 +27,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.pdevjay.proxect.presentation.navigation.BottomNavItem
 import com.pdevjay.proxect.presentation.navigation.MainNavHost
-import com.pdevjay.proxect.presentation.screen.add.ProjectAddScreen
-import com.pdevjay.proxect.presentation.screen.add.ProjectViewModel
-import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
+import com.pdevjay.proxect.presentation.screen.project.ProjectAddScreen
+import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.common.CustomDialog
 
 //@Composable
