@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
 import java.text.SimpleDateFormat
@@ -27,6 +28,9 @@ fun ProjectCard(project: Project, onClick: () -> Unit = {}) {
     val formatter = remember {
         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     }
+
+//    val textColor = if (isColorDark(Color(project.color))) Color.White.copy(alpha = 0.8f) else Color.Black.copy(alpha = 0.8f)
+    val textColor = if (isColorDark(Color(project.color))) Color.White else Color.Black
 
     Card(
         modifier = Modifier
@@ -43,7 +47,7 @@ fun ProjectCard(project: Project, onClick: () -> Unit = {}) {
             Text(
                 text = project.name,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White
+                color = textColor
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
@@ -55,15 +59,21 @@ fun ProjectCard(project: Project, onClick: () -> Unit = {}) {
                     )
                 }",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.LightGray
+                color = textColor.copy(alpha = 0.8f)
             )
             if (project.description.isNotBlank()) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = project.description,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = textColor.copy(alpha = 0.7f)
                 )
             }
         }
     }
+}
+
+fun isColorDark(color: Color): Boolean {
+    val luminance = color.luminance()
+    return luminance < 0.5
 }

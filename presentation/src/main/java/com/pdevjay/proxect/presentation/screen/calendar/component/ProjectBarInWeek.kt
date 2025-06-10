@@ -85,7 +85,7 @@ fun ProjectBarLineInWeek(
                             modifier = Modifier.padding(horizontal = 6.dp),
                             text = project.name,
                             style = MaterialTheme.typography.labelSmall.copy(
-                                color = Color.White,
+                                color = Color.White.copy(alpha = 0.9f),
                                 textAlign = TextAlign.Center
                             ),
                             maxLines = 1,

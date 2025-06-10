@@ -6,5 +6,5 @@ data class Project(
     val description: String,
     val startDate: Long,
     val endDate: Long,
-    val color: Long = 0xFF888888
+    val color: Long = 0xFF9E9E9E
 )

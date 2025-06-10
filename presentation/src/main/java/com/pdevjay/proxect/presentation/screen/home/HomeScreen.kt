@@ -39,11 +39,17 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
     }
 
     val otherProjects = remember(projects) {
-        projects.filter { it.endDate.toLocalDate() < today }
+        val oneWeekAgo = today.minusDays(7)
+        projects.filter {
+            it.endDate.toLocalDate() in oneWeekAgo..today.minusDays(1)
+        }
     }
 
     val futureProjects = remember(projects) {
-        projects.filter { it.startDate.toLocalDate() > today }
+        val oneWeekLater = today.plusDays(7)
+        projects.filter {
+            it.startDate.toLocalDate() in today.plusDays(1)..oneWeekLater
+        }
     }
 
     if (isModalVisible && selectedDate != null) {

@@ -33,7 +33,7 @@ fun CalendarTopBar(
 ) {
     Column(
         modifier = Modifier
-            .background(Color(0xFFF3F3FA))
+//            .background(Color(0xFFF3F3FA))
             .padding(padding)
     ) {
         Row(

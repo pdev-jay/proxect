@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import java.time.LocalDate
 
@@ -27,7 +30,7 @@ fun ProjectDialogHeader(
     contentType: DialogContentType,
     selectedDate: LocalDate,
     showBack: Boolean = true,
-    onDismiss: () -> Unit?,
+    onDismiss: () -> Unit = {},
     onEdit: () -> Unit = {},
     onConfirmEdit: () -> Unit = {},
     onBack: () -> Unit = {}
@@ -67,6 +70,10 @@ fun ProjectDialogHeader(
                         )
                     }
                 }
+
+                DialogContentType.AddProject -> {
+
+                }
             }
         }
 
@@ -90,7 +97,11 @@ fun ProjectDialogHeader(
                     }
                 }
 
-                else -> Unit
+                else -> {
+                    IconButton(onClick = { onDismiss() }) {
+                        Icon(Icons.Default.Close, contentDescription = "닫기")
+                    }
+                }
             }
         }
     }

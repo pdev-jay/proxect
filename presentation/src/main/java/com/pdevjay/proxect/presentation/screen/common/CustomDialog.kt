@@ -50,8 +50,8 @@ fun CustomDialog(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(1f)
-                .fillMaxHeight(1f) // 화면 90% 덮기 (원하면 .fillMaxSize()도 가능)
+                .fillMaxWidth(0.9f)
+                .fillMaxHeight(0.85f) // 화면 90% 덮기 (원하면 .fillMaxSize()도 가능)
                 .clip(RoundedCornerShape(16.dp))
                 .offset { IntOffset(0, offsetY.roundToInt()) }
             ,
