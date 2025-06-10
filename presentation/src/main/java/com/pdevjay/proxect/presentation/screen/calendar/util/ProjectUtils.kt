@@ -14,19 +14,23 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 
 
-fun packProjectsIntoLines(
-    week: List<CalendarDay>,
-    projects: List<Project>
-): List<List<Project>> {
-    val lines = mutableListOf<MutableList<Pair<Project, IntRange>>>() // 줄별로 프로젝트와 index 범위 보관
-
-    val sortedProjects = projects.sortedWith(
+fun sortProject(projects: List<Project>): List<Project> {
+    return projects.sortedWith(
         compareBy<Project>(
             { it.startDate.toLocalDate() } // 날짜 단위로만 비교
         ).thenByDescending {
             ChronoUnit.DAYS.between(it.startDate.toLocalDate(), it.endDate.toLocalDate())
         }
     )
+}
+
+fun packProjectsIntoLines(
+    week: List<CalendarDay>,
+    projects: List<Project>
+): List<List<Project>> {
+    val lines = mutableListOf<MutableList<Pair<Project, IntRange>>>() // 줄별로 프로젝트와 index 범위 보관
+
+    val sortedProjects = sortProject(projects)
 
     for (project in sortedProjects) {
         val startDate = project.startDate.toLocalDate()

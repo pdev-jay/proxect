@@ -2,6 +2,7 @@ package com.pdevjay.proxect.data.di
 
 import com.pdevjay.proxect.data.repository.ProjectRepositoryImpl
 import com.pdevjay.proxect.domain.repository.ProjectRepository
+import com.pdevjay.proxect.domain.usecase.DeleteProjectUseCase
 import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.InsertProjectUseCase
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
@@ -30,6 +31,7 @@ object DataModule {
         return ProjectUseCases(
             getProjects = GetProjectsUseCase(repository),
             insertProject = InsertProjectUseCase(repository),
+            deleteProject = DeleteProjectUseCase(repository)
         )
     }
 }

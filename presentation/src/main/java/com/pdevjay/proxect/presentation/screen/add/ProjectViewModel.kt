@@ -40,4 +40,11 @@ class ProjectViewModel @Inject constructor(
             loadProjects()
         }
     }
+
+    fun deleteProject(project: Project) {
+        viewModelScope.launch {
+            useCases.deleteProject(project.id)
+            loadProjects()
+        }
+    }
 }

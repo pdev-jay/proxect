@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,9 +53,15 @@ fun ProjectDialog(
     initialSelectedProject: Project? = null,
     projects: List<Project>? = null,
     onDismiss: () -> Unit,
+    onDelete: (Project) -> Unit = {}
 ) {
-    var contentType by remember { mutableStateOf<DialogContentType>(initialContentType ?: DialogContentType.ProjectList) }
+    var contentType by remember {
+        mutableStateOf<DialogContentType>(
+            initialContentType ?: DialogContentType.ProjectList
+        )
+    }
     var selectedProject by remember { mutableStateOf<Project?>(initialSelectedProject) }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     Dialog(properties = DialogProperties(
         usePlatformDefaultWidth = false,
@@ -97,9 +104,16 @@ fun ProjectDialog(
                         },
                         label = "DialogTitle"
                     ) { content ->
-                        when(content){
-                            DialogContentType.ProjectList -> Text("${selectedDate}", style = MaterialTheme.typography.titleLarge)
-                            DialogContentType.ProjectDetail -> Text("", style = MaterialTheme.typography.titleLarge)
+                        when (content) {
+                            DialogContentType.ProjectList -> Text(
+                                "${selectedDate}",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+
+                            DialogContentType.ProjectDetail -> Text(
+                                "",
+                                style = MaterialTheme.typography.titleLarge
+                            )
                         }
                     }
 
@@ -156,9 +170,9 @@ fun ProjectDialog(
                         DialogContentType.ProjectDetail -> {
                             selectedProject?.let { project ->
                                 Column(
-                                    modifier = Modifier.fillMaxHeight()
-                                        .verticalScroll(rememberScrollState())
-                                    ,
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .verticalScroll(rememberScrollState()),
                                     verticalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Column(
@@ -175,10 +189,11 @@ fun ProjectDialog(
                                         Text(project.description)
                                     }
 
-                                    if (projects != null) {
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        if (projects != null) {
                                             IconButton(onClick = {
                                                 contentType = DialogContentType.ProjectList
                                             }) {
@@ -188,6 +203,24 @@ fun ProjectDialog(
                                                 )
                                             }
                                         }
+
+                                        IconButton(onClick = {
+                                            showDeleteConfirmDialog = true
+
+//                                            onDelete(project)
+//                                            if (projects != null) {
+//                                                contentType = DialogContentType.ProjectList
+//                                            } else {
+//                                                onDismiss()
+//                                                contentType = DialogContentType.ProjectList
+//                                            }
+                                        }) {
+                                            Icon(
+                                                Icons.Default.Delete,
+                                                contentDescription = "삭제"
+                                            )
+                                        }
+
                                     }
                                 }
                             }
@@ -197,5 +230,47 @@ fun ProjectDialog(
             }
         }
     }
+
+    // 삭제 확인 다이얼로그
+    if (showDeleteConfirmDialog && selectedProject != null) {
+        ConfirmDeleteDialog(
+            projectName = selectedProject!!.name,
+            onConfirm = {
+                onDelete(selectedProject!!)
+                showDeleteConfirmDialog = false
+                if (projects != null) {
+                    contentType = DialogContentType.ProjectList
+                } else {
+                    onDismiss()
+                }
+            },
+            onDismiss = {
+                showDeleteConfirmDialog = false
+            }
+        )
+    }
 }
 
+
+@Composable
+fun ConfirmDeleteDialog(
+    projectName: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("프로젝트 삭제") },
+        text = { Text("\"$projectName\" 프로젝트를 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.") },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = onConfirm) {
+                Text("삭제", color = MaterialTheme.colorScheme.error)
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                Text("취소")
+            }
+        }
+    )
+}

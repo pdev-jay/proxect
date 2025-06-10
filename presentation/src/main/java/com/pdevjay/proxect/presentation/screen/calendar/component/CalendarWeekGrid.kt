@@ -41,7 +41,7 @@ import java.time.temporal.ChronoUnit
 fun CalendarWeekGrid(
     calendarState: CalendarState,
     projects: List<Project>,
-    onDayClick: (CalendarDay, List<Project>) -> Unit
+    onDayClick: (CalendarDay) -> Unit
 ) {
     val days = calendarState.days
     val projectsMapped = remember(projects) {
@@ -145,7 +145,7 @@ fun CalendarWeekGrid(
                                 modifier = Modifier
                                     .height(cellHeight)
                                     .weight(1f)
-                                    .clickable { onDayClick(day, sortedProjects) }
+                                    .clickable { onDayClick(day) }
                             )
                         }
                     }

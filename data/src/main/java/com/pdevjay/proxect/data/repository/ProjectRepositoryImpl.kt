@@ -6,6 +6,7 @@ import com.pdevjay.proxect.data.remote.toDto
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.repository.ProjectRepository
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import javax.inject.Inject
 
@@ -26,5 +27,13 @@ class ProjectRepositoryImpl @Inject constructor(
         supabase
             .postgrest["projects"]
             .insert(dto)
+    }
+
+    override suspend fun deleteProject(id: String) {
+        supabase.from("projects").delete {
+            filter {
+                eq("id", id)
+            }
+        }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.presentation.navigation.BottomNavItem.Companion.items
 import com.pdevjay.proxect.presentation.screen.add.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
 import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
@@ -51,10 +52,15 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
         ProjectDialog(
             initialContentType = DialogContentType.ProjectDetail,
             selectedDate = selectedDate!!,
-            initialSelectedProject = selectedProject
-        ) {
-            isModalVisible = false
-        }
+            initialSelectedProject = selectedProject,
+            onDismiss = {
+                isModalVisible = false
+            },
+            onDelete = {
+                projectViewModel.deleteProject(it)
+            }
+        )
+
     }
 
     LazyColumn(
