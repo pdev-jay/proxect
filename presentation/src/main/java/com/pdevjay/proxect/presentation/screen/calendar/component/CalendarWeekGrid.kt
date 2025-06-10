@@ -31,13 +31,17 @@ import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 import com.pdevjay.proxect.presentation.screen.calendar.util.getProjectsForWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @Composable
 fun CalendarWeekGrid(
     calendarState: CalendarState,
     projects: List<Project>,
-    onDayClick: (CalendarDay) -> Unit
+    onDayClick: (CalendarDay, List<Project>) -> Unit
 ) {
     val days = calendarState.days
     val projectsMapped = remember(projects) {
@@ -105,10 +109,6 @@ fun CalendarWeekGrid(
                             }
                         }
 
-                        // 프로젝트 바
-//                    packedLines.forEach { lineProjects ->
-//                        ProjectBarLineInWeek(weekDates, lineProjects, cellHeight - dayCellHeight)
-//                    }
                         ProjectBarLineInWeek(
                             week = weekDates,
                             lineProjects = weekProjects, // 모든 프로젝트 전달
@@ -127,12 +127,26 @@ fun CalendarWeekGrid(
 
                     Row(Modifier.fillMaxWidth()) {
                         weekDates.forEach { day ->
+                            val dayProjects = projects.filter {
+                                val start = it.startDate.toLocalDate()
+                                val end = it.endDate.toLocalDate()
+                                day.date in start..end
+                            }
+
+                            val sortedProjects = dayProjects.sortedWith(
+                                compareBy<Project>(
+                                    { it.startDate.toLocalDate() } // 날짜 단위로만 비교
+                                ).thenByDescending {
+                                    ChronoUnit.DAYS.between(it.startDate.toLocalDate(), it.endDate.toLocalDate())
+                                }
+                            )
 
                             Box(
-                                modifier = Modifier.height(cellHeight).weight(1f)
-                                    .clickable { onDayClick(day) },
-
-                                )
+                                modifier = Modifier
+                                    .height(cellHeight)
+                                    .weight(1f)
+                                    .clickable { onDayClick(day, sortedProjects) }
+                            )
                         }
                     }
                 }
@@ -141,4 +155,8 @@ fun CalendarWeekGrid(
     }
 }
 
+fun Long.toLocalDate(): LocalDate =
+    Instant.ofEpochMilli(this)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
 

@@ -67,7 +67,7 @@ fun CalendarGrid(
                             .padding(2.dp)
                             .height(cellHeight)
                             .clickable {
-                                viewModel.selectDate(calendarDay.date)
+//                                viewModel.selectDate(calendarDay.date)
                             },
                         contentAlignment = Alignment.TopCenter
                     ) {

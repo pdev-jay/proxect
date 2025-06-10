@@ -1,49 +1,60 @@
 package com.pdevjay.proxect.presentation.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.presentation.screen.add.ProjectViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
+import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
+import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
+import com.pdevjay.proxect.presentation.screen.common.ProjectDialog
+import com.pdevjay.proxect.presentation.screen.common.ProjectCard
+import java.time.LocalDate
 
 
 @Composable
-fun HomeScreen(viewModel: ProjectViewModel) {
-    val projects by viewModel.projects.collectAsState()
+fun HomeScreen(projectViewModel: ProjectViewModel) {
+    val projects by projectViewModel.projects.collectAsState()
 
-    val today = remember { System.currentTimeMillis() }
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var isModalVisible by remember { mutableStateOf(false) }
+    var selectedProject by remember { mutableStateOf<Project?>(null) }
+
+    val today = remember { LocalDate.now() }
 
     val todayProjects = remember(projects) {
-        projects.filter { it.startDate <= today && it.endDate >= today }
+        projects.filter { it.startDate.toLocalDate() <= today && it.endDate.toLocalDate() >= today }
     }
 
     val otherProjects = remember(projects) {
-        projects.filter { it.endDate < today }
+        projects.filter { it.endDate.toLocalDate() < today }
     }
 
     val futureProjects = remember(projects) {
-        projects.filter { it.startDate > today }
+        projects.filter { it.startDate.toLocalDate() > today }
+    }
+
+    if (isModalVisible && selectedDate != null) {
+        ProjectDialog(
+            initialContentType = DialogContentType.ProjectDetail,
+            selectedDate = selectedDate!!,
+            initialSelectedProject = selectedProject
+        ) {
+            isModalVisible = false
+        }
     }
 
     LazyColumn(
@@ -61,7 +72,11 @@ fun HomeScreen(viewModel: ProjectViewModel) {
                 )
             }
             items(todayProjects) { project ->
-                ProjectCard(project = project)
+                ProjectCard(project = project){
+                    selectedProject = project
+                    selectedDate = project.startDate.toLocalDate()
+                    isModalVisible = true
+                }
             }
         }
 
@@ -74,7 +89,11 @@ fun HomeScreen(viewModel: ProjectViewModel) {
                 )
             }
             items(futureProjects) { project ->
-                ProjectCard(project = project)
+                ProjectCard(project = project){
+                    selectedProject = project
+                    selectedDate = project.startDate.toLocalDate()
+                    isModalVisible = true
+                }
             }
         }
 
@@ -87,50 +106,14 @@ fun HomeScreen(viewModel: ProjectViewModel) {
                 )
             }
             items(otherProjects) { project ->
-                ProjectCard(project = project)
+                ProjectCard(project = project){
+                    selectedProject = project
+                    selectedDate = project.startDate.toLocalDate()
+                    isModalVisible = true
+                }
             }
         }
     }
 }
 
 
-@Composable
-fun ProjectCard(project: Project) {
-    val formatter = remember {
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(2.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = project.name,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "${formatter.format(Date(project.startDate))} ~ ${
-                    formatter.format(
-                        Date(
-                            project.endDate
-                        )
-                    )
-                }",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
-            if (project.description.isNotBlank()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = project.description,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
-    }
-}

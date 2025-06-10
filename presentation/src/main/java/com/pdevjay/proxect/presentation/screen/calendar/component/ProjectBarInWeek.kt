@@ -1,7 +1,6 @@
 package com.pdevjay.proxect.presentation.screen.calendar.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.domain.model.toLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.util.packProjectsIntoLines
 
@@ -31,7 +31,7 @@ fun ProjectBarLineInWeek(
     lineProjects: List<Project>,
     restHeight: Dp
 ) {
-    val maxLines = 5
+    val maxLines = 4
     val barLines = maxLines - 1
     val verticalPadding = 2.dp
     val barHeight = restHeight / maxLines
@@ -67,7 +67,8 @@ fun ProjectBarLineInWeek(
                 }
 
                 var currentIndex = 0
-                barRanges.sortedBy { it.first.startDate }.forEach { (_, startIndex, endIndex) ->
+                barRanges
+                    .forEach { (project, startIndex, endIndex) ->
                     if (startIndex > currentIndex) {
                         Spacer(modifier = Modifier.weight((startIndex - currentIndex).toFloat()))
                     }
@@ -77,8 +78,20 @@ fun ProjectBarLineInWeek(
                             .weight((endIndex - startIndex + 1).toFloat())
                             .fillMaxHeight()
                             .padding(horizontal = 2.dp)
-                            .background(Color.LightGray, RoundedCornerShape(4.dp))
-                    )
+                            .background(Color(project.color), RoundedCornerShape(4.dp)),
+                        contentAlignment = Alignment.CenterStart
+                    ){
+                        BasicText(
+                            modifier = Modifier.padding(horizontal = 6.dp),
+                            text = project.name,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = Color.White,
+                                textAlign = TextAlign.Center
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
 
                     currentIndex = endIndex + 1
                 }

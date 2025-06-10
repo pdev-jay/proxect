@@ -1,18 +1,10 @@
 package com.pdevjay.proxect.domain.model
 
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
-
 data class Project(
     val id: String,
     val name: String,
     val description: String,
     val startDate: Long,
-    val endDate: Long
+    val endDate: Long,
+    val color: Long = 0xFF888888
 )
-
-fun Long.toLocalDate(): LocalDate =
-    Instant.ofEpochMilli(this)
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()

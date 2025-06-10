@@ -1,8 +1,18 @@
 package com.pdevjay.proxect.presentation.screen.calendar.util
 
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.domain.model.toLocalDate
+import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
+import java.time.temporal.ChronoUnit
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
+
 
 fun packProjectsIntoLines(
     week: List<CalendarDay>,
@@ -10,7 +20,13 @@ fun packProjectsIntoLines(
 ): List<List<Project>> {
     val lines = mutableListOf<MutableList<Pair<Project, IntRange>>>() // 줄별로 프로젝트와 index 범위 보관
 
-    val sortedProjects = projects.sortedBy { it.startDate }
+    val sortedProjects = projects.sortedWith(
+        compareBy<Project>(
+            { it.startDate.toLocalDate() } // 날짜 단위로만 비교
+        ).thenByDescending {
+            ChronoUnit.DAYS.between(it.startDate.toLocalDate(), it.endDate.toLocalDate())
+        }
+    )
 
     for (project in sortedProjects) {
         val startDate = project.startDate.toLocalDate()
@@ -65,3 +81,24 @@ fun getProjectsForWeek(
         !end.isBefore(weekStart) && !start.isAfter(weekEnd)
     }
 }
+
+fun Modifier.dashedRectBorder(
+    strokeWidth: Dp = 1.dp,
+    color: Color = Color.Gray,
+    dashLengths: FloatArray = floatArrayOf(10f, 10f), // [dash, gap]
+    cornerRadius: Dp = 0.dp
+): Modifier = this.then(
+    Modifier.drawBehind {
+        val stroke = Stroke(
+            width = strokeWidth.toPx(),
+            pathEffect = PathEffect.dashPathEffect(dashLengths, 0f)
+        )
+        val radius = cornerRadius.toPx()
+        drawRoundRect(
+            color = color,
+            size = size,
+            style = stroke,
+            cornerRadius = CornerRadius(radius, radius)
+        )
+    }
+)

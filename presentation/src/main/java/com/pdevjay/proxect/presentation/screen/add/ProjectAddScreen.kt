@@ -1,19 +1,28 @@
 package com.pdevjay.proxect.presentation.screen.add
 
-import android.content.Context
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
@@ -26,12 +35,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.presentation.screen.calendar.component.dashedRectBorder
+import com.pdevjay.proxect.presentation.screen.calendar.util.dashedRectBorder
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
@@ -49,6 +59,17 @@ fun ProjectAddScreen(
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
 
+    var selectedColor by remember { mutableStateOf(Color.Gray) }
+    val colorOptions = listOf(
+        Color(0xFFEF5350), // Red
+        Color(0xFF42A5F5), // Blue
+        Color(0xFF66BB6A), // Green
+        Color(0xFFFFCA28), // Yellow
+        Color(0xFFAB47BC), // Purple
+        Color.Gray         // Default
+    )
+
+
     // 날짜 포맷 함수
     val formatDate: (Long) -> String = {
         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
@@ -57,9 +78,12 @@ fun ProjectAddScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .verticalScroll(rememberScrollState())
+        ,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        Text("프로젝트", style = MaterialTheme.typography.titleMedium)
+
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
@@ -67,22 +91,55 @@ fun ProjectAddScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier)
+
+        Text("내용", style = MaterialTheme.typography.titleMedium)
+
         OutlinedTextField(
             value = description,
             onValueChange = { description = it },
             label = { Text("설명") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 10
         )
 
+        Spacer(modifier = Modifier)
         Text(
             "시작일: ${formatDate(startDate)}",
             modifier = Modifier.clickable { showStartPicker = true }
         )
+        Spacer(modifier = Modifier)
         Text(
             "종료일: ${formatDate(endDate)}",
             modifier = Modifier.clickable { showEndPicker = true }
         )
 
+        Spacer(modifier = Modifier)
+        Text("색상 선택", style = MaterialTheme.typography.titleMedium)
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            colorOptions.forEach { color ->
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .border(
+                            width = if (color == selectedColor) 3.dp else 1.dp,
+                            color = if (color == selectedColor) Color.Black else Color.LightGray,
+                            shape = CircleShape
+                        )
+                        .clickable { selectedColor = color }
+                )
+            }
+        }
+        Spacer(modifier = Modifier)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,7 +150,8 @@ fun ProjectAddScreen(
                         name = title,
                         description = description,
                         startDate = startDate,
-                        endDate = endDate
+                        endDate = endDate,
+                        color = selectedColor.toArgb().toLong()
                     )
                     viewModel.addProject(project)
                     title = ""
@@ -105,6 +163,8 @@ fun ProjectAddScreen(
         ) {
             Icon(Icons.Default.Add, contentDescription = "추가")
         }
+
+
     }
     if (showStartPicker) {
         DatePickerDialogWrapper(

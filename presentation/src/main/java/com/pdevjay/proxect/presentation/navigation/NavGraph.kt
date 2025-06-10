@@ -11,6 +11,7 @@ import com.pdevjay.proxect.presentation.screen.home.HomeScreen
 import com.pdevjay.proxect.presentation.screen.lists.ListScreen
 import com.pdevjay.proxect.presentation.screen.settings.SettingsScreen
 import com.pdevjay.proxect.presentation.screen.calendar.CalendarScreen
+import com.pdevjay.proxect.presentation.screen.calendar.CalendarViewModel
 
 
 @Composable
