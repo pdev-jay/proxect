@@ -26,10 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
+import com.pdevjay.proxect.domain.utils.toEpochMillis
+import com.pdevjay.proxect.domain.utils.toLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
 import com.pdevjay.proxect.presentation.screen.common.ColorPickerGrid
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
@@ -46,15 +48,15 @@ fun ProjectAddContent(
                 id = UUID.randomUUID().toString(),
                 name = "",
                 description = "",
-                startDate = System.currentTimeMillis(),
-                endDate = System.currentTimeMillis(),
+                startDate = LocalDate.now().toEpochMillis(),
+                endDate = LocalDate.now().toEpochMillis(),
             )
         )
     }
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var startDate by remember { mutableStateOf(System.currentTimeMillis()) }
-    var endDate by remember { mutableStateOf(System.currentTimeMillis()) }
+    var startDate by remember { mutableStateOf(LocalDate.now().toEpochMillis()) }
+    var endDate by remember { mutableStateOf(LocalDate.now().toEpochMillis()) }
 
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -64,7 +66,6 @@ fun ProjectAddContent(
     val formatDate: (Long) -> String = {
         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
     }
-
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -134,39 +135,13 @@ fun ProjectAddContent(
             }
         )
 
-//        Spacer(modifier = Modifier)
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .dashedRectBorder(cornerRadius = 8.dp)
-//                .clickable(enabled = title.isNotBlank()) {
-//                    val project = Project(
-//                        id = UUID.randomUUID().toString(),
-//                        name = title,
-//                        description = description,
-//                        startDate = startDate,
-//                        endDate = endDate,
-//                        color = selectedColor.toArgb().toLong()
-//                    )
-//                    viewModel.addProject(project)
-//                    title = ""
-//                    description = ""
-//                    onBack()
-//                }
-//                .padding(12.dp),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Icon(Icons.Default.Add, contentDescription = "추가")
-//        }
-
-
     }
     if (showDatePicker) {
         DatePickerDialogWrapper(
             initialStartDate = startDate,
             onDismiss = { showDatePicker = false },
             onDateRangeSelected = {
-                startDate = it.first ?: System.currentTimeMillis()
+                startDate = it.first ?: LocalDate.now().toEpochMillis()
                 endDate = it.second ?: startDate
                 projectToAdd = projectToAdd.copy(
                     startDate = startDate,

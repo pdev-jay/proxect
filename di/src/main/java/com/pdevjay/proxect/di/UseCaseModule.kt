@@ -1,11 +1,15 @@
 package com.pdevjay.proxect.di
 
 import com.pdevjay.proxect.data.usecase.DeleteProjectUseCaseImpl
+import com.pdevjay.proxect.data.usecase.GetFutureProjectsUseCaseImpl
+import com.pdevjay.proxect.data.usecase.GetPastProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.InsertProjectUseCaseImpl
 import com.pdevjay.proxect.data.usecase.UpdateProjectUseCaseImpl
 import com.pdevjay.proxect.domain.repository.ProjectRepository
 import com.pdevjay.proxect.domain.usecase.DeleteProjectUseCase
+import com.pdevjay.proxect.domain.usecase.GetFutureProjectsUseCase
+import com.pdevjay.proxect.domain.usecase.GetPastProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.InsertProjectUseCase
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
@@ -39,19 +43,32 @@ object UseCaseModule {
         repo: ProjectRepository
     ): UpdateProjectUseCase = UpdateProjectUseCaseImpl(repo)
 
+    @Provides
+    fun provideGetPastProjectsUseCase(
+        repo: ProjectRepository
+    ): GetPastProjectsUseCase = GetPastProjectsUseCaseImpl(repo)
+
+    @Provides
+    fun provideGetFutureProjectsUseCase(
+        repo: ProjectRepository
+    ): GetFutureProjectsUseCase = GetFutureProjectsUseCaseImpl(repo)
 
     @Provides
     fun provideProjectUseCases(
         getProjects: GetProjectsUseCase,
         insertProject: InsertProjectUseCase,
         deleteProject: DeleteProjectUseCase,
-        updateProject: UpdateProjectUseCase
+        updateProject: UpdateProjectUseCase,
+        getPastProjects: GetPastProjectsUseCase,
+        getFutureProjects: GetFutureProjectsUseCase
     ): ProjectUseCases {
         return ProjectUseCases(
             getProjects = getProjects,
             insertProject = insertProject,
             deleteProject = deleteProject,
-            updateProject = updateProject
+            updateProject = updateProject,
+            getPastProjects = getPastProjects,
+            getFutureProjects = getFutureProjects
         )
     }
 

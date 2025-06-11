@@ -31,6 +31,7 @@ object SupabaseModule {
                 prettyPrint = true
             })
         }
+
     }
 
     @Provides

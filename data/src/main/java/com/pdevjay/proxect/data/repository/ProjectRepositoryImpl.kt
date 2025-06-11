@@ -5,9 +5,12 @@ import com.pdevjay.proxect.data.remote.toDomain
 import com.pdevjay.proxect.data.remote.toDto
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.repository.ProjectRepository
+import com.pdevjay.proxect.domain.utils.toEpochMillis
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Order
+import java.time.LocalDate
 import javax.inject.Inject
 
 class ProjectRepositoryImpl @Inject constructor(
@@ -42,4 +45,39 @@ class ProjectRepositoryImpl @Inject constructor(
         supabase.from("projects").upsert(dto)
 
     }
+
+    override suspend fun getPastProjects(before: LocalDate, limit: Int): List<Project> {
+        return supabase
+            .from("projects")
+            .select() {
+                filter {
+                    lt("start_date", before.toEpochMillis())
+                }
+
+                order(column = "start_date", order = Order.ASCENDING)
+
+                limit(count = limit.toLong())
+            }
+            .decodeList<ProjectDto>()
+            .map { it.toDomain() }
+    }
+
+    override suspend fun getFutureProjects(after: LocalDate, limit: Int): List<Project> {
+        return supabase
+            .from("projects")
+            .select() {
+                filter {
+                    gt("start_date", after.toEpochMillis())
+                }
+
+                order(column = "start_date", order = Order.ASCENDING)
+
+                limit(count = limit.toLong())
+            }
+            .decodeList<ProjectDto>()
+            .map { it.toDomain() }
+    }
+
+
 }
+

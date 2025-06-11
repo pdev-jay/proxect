@@ -5,7 +5,7 @@ import com.pdevjay.proxect.domain.repository.ProjectRepository
 import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
 import javax.inject.Inject
 
-class GetProjectsUseCaseImpl@Inject constructor(
+class GetProjectsUseCaseImpl @Inject constructor(
     private val repository: ProjectRepository
 ): GetProjectsUseCase {
     override suspend fun invoke(): List<Project> {

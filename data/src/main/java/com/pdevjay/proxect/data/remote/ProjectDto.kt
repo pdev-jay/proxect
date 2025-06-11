@@ -11,7 +11,7 @@ data class ProjectDto(
     val description: String,
     @SerialName("start_date") val startDate: Long,
     @SerialName("end_date") val endDate: Long,
-    val color: Long = 0xFF9E9E9E // 기본 회색, optional 처리
+    val color: Long = 0xFF9E9E9E,
 )
 
 fun ProjectDto.toDomain() = Project(

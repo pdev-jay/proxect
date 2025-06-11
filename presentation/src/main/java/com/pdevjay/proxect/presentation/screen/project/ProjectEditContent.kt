@@ -18,9 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
 import com.pdevjay.proxect.presentation.screen.common.ColorPickerGrid
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 
@@ -95,8 +97,8 @@ fun ProjectEditContent(
             initialStartDate = startDate,
             onDismiss = { showDatePicker = false },
             onDateRangeSelected = {
-                startDate = it.first ?: System.currentTimeMillis()
-                endDate = it.second ?: startDate
+                startDate = it.first ?: LocalDate.now().toEpochMillis()
+                endDate = it.second ?: LocalDate.now().toEpochMillis()
 
                 onChange(project.copy(startDate = startDate, endDate = endDate))
             }
