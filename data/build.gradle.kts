@@ -69,11 +69,6 @@ dependencies {
     // Hilt 컴파일러 (KSP)
     ksp("com.google.dagger:hilt-android-compiler:2.56.2")
 
-    // Compose → Hilt ViewModel 통합
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    // Hilt Navigation 컴파일러 (KSP)
-    ksp("androidx.hilt:hilt-compiler:1.2.0")
-
     implementation(project(":domain"))
 
     // supabase

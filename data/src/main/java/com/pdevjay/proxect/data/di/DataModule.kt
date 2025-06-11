@@ -2,11 +2,6 @@ package com.pdevjay.proxect.data.di
 
 import com.pdevjay.proxect.data.repository.ProjectRepositoryImpl
 import com.pdevjay.proxect.domain.repository.ProjectRepository
-import com.pdevjay.proxect.domain.usecase.DeleteProjectUseCase
-import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
-import com.pdevjay.proxect.domain.usecase.InsertProjectUseCase
-import com.pdevjay.proxect.domain.usecase.ProjectUseCases
-import com.pdevjay.proxect.domain.usecase.UpdateProjectUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,17 +18,4 @@ object DataModule {
     fun provideProjectRepository(
         supabase: SupabaseClient
     ): ProjectRepository = ProjectRepositoryImpl(supabase)
-
-    @Provides
-    @Singleton
-    fun provideProjectUseCases(
-        repository: ProjectRepository
-    ): ProjectUseCases {
-        return ProjectUseCases(
-            getProjects = GetProjectsUseCase(repository),
-            insertProject = InsertProjectUseCase(repository),
-            deleteProject = DeleteProjectUseCase(repository),
-            updateProject = UpdateProjectUseCase(repository)
-        )
-    }
 }
