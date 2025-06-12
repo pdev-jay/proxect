@@ -16,11 +16,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
-import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
+import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
-import com.pdevjay.proxect.presentation.screen.common.ProjectDialog
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
+import com.pdevjay.proxect.presentation.screen.common.ProjectDialog
+import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import java.time.LocalDate
 
 
@@ -35,20 +35,20 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
     val today = remember { LocalDate.now() }
 
     val todayProjects = remember(projects) {
-        projects.filter { it.startDate.toLocalDate() <= today && it.endDate.toLocalDate() >= today }
+        projects.filter { it.startDate.toUTCLocalDate() <= today && it.endDate.toUTCLocalDate() >= today }
     }
 
     val otherProjects = remember(projects) {
         val oneWeekAgo = today.minusDays(7)
         projects.filter {
-            it.endDate.toLocalDate() in oneWeekAgo..today.minusDays(1)
+            it.endDate.toUTCLocalDate() in oneWeekAgo..today.minusDays(1)
         }
     }
 
     val futureProjects = remember(projects) {
         val oneWeekLater = today.plusDays(7)
         projects.filter {
-            it.startDate.toLocalDate() in today.plusDays(1)..oneWeekLater
+            it.startDate.toUTCLocalDate() in today.plusDays(1)..oneWeekLater
         }
     }
 
@@ -87,7 +87,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
             items(todayProjects) { project ->
                 ProjectCard(project = project){
                     selectedProject = project
-                    selectedDate = project.startDate.toLocalDate()
+                    selectedDate = project.startDate.toUTCLocalDate()
                     isModalVisible = true
                 }
             }
@@ -104,7 +104,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
             items(futureProjects) { project ->
                 ProjectCard(project = project){
                     selectedProject = project
-                    selectedDate = project.startDate.toLocalDate()
+                    selectedDate = project.startDate.toUTCLocalDate()
                     isModalVisible = true
                 }
             }
@@ -121,7 +121,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
             items(otherProjects) { project ->
                 ProjectCard(project = project){
                     selectedProject = project
-                    selectedDate = project.startDate.toLocalDate()
+                    selectedDate = project.startDate.toUTCLocalDate()
                     isModalVisible = true
                 }
             }

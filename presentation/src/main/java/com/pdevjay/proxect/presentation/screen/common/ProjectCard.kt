@@ -19,17 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.utils.formatDate
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
 fun ProjectCard(project: Project, onClick: () -> Unit = {}) {
-    val formatter = remember {
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    }
-
-//    val textColor = if (isColorDark(Color(project.color))) Color.White.copy(alpha = 0.8f) else Color.Black.copy(alpha = 0.8f)
     val textColor = if (isColorDark(Color(project.color))) Color.White else Color.Black
 
     Card(
@@ -51,12 +47,12 @@ fun ProjectCard(project: Project, onClick: () -> Unit = {}) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "${formatter.format(Date(project.startDate))} ~ ${
-                    formatter.format(
-                        Date(
+                text = "${formatDate(project.startDate)} ~ ${
+                    formatDate
+                        (
                             project.endDate
                         )
-                    )
+                    
                 }",
                 style = MaterialTheme.typography.bodySmall,
                 color = textColor.copy(alpha = 0.8f)

@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 import com.pdevjay.proxect.presentation.screen.calendar.util.getProjectsForWeek
@@ -128,16 +129,16 @@ fun CalendarWeekGrid(
                     Row(Modifier.fillMaxWidth()) {
                         weekDates.forEach { day ->
                             val dayProjects = projects.filter {
-                                val start = it.startDate.toLocalDate()
-                                val end = it.endDate.toLocalDate()
+                                val start = it.startDate.toUTCLocalDate()
+                                val end = it.endDate.toUTCLocalDate()
                                 day.date in start..end
                             }
 
                             val sortedProjects = dayProjects.sortedWith(
                                 compareBy<Project>(
-                                    { it.startDate.toLocalDate() } // 날짜 단위로만 비교
+                                    { it.startDate.toUTCLocalDate() } // 날짜 단위로만 비교
                                 ).thenByDescending {
-                                    ChronoUnit.DAYS.between(it.startDate.toLocalDate(), it.endDate.toLocalDate())
+                                    ChronoUnit.DAYS.between(it.startDate.toUTCLocalDate(), it.endDate.toUTCLocalDate())
                                 }
                             )
 
@@ -154,9 +155,4 @@ fun CalendarWeekGrid(
         }
     }
 }
-
-fun Long.toLocalDate(): LocalDate =
-    Instant.ofEpochMilli(this)
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()
 

@@ -1,12 +1,9 @@
 package com.pdevjay.proxect.presentation.screen.lists
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,23 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pdevjay.proxect.presentation.navigation.BottomNavItem.Companion.items
-import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
+import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
@@ -53,7 +41,7 @@ fun ProjectListScreen(viewModel: ProjectListViewModel = hiltViewModel()) {
     val listState = rememberLazyListState()
 
     // 날짜별로 그룹핑
-    val groupedProjects = projects.groupBy { it.startDate.toLocalDate() }
+    val groupedProjects = projects.groupBy { it.startDate.toUTCLocalDate() }
 
 
     // 👇 Push to Refresh: 맨 아래 도달 시 미래 프로젝트 로드

@@ -4,22 +4,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
+import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import java.time.temporal.ChronoUnit
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 
 
 fun sortProject(projects: List<Project>): List<Project> {
     return projects.sortedWith(
         compareBy<Project>(
-            { it.startDate.toLocalDate() } // 날짜 단위로만 비교
+            { it.startDate.toUTCLocalDate() } // 날짜 단위로만 비교
         ).thenByDescending {
-            ChronoUnit.DAYS.between(it.startDate.toLocalDate(), it.endDate.toLocalDate())
+            ChronoUnit.DAYS.between(it.startDate.toUTCLocalDate(), it.endDate.toUTCLocalDate())
         }
     )
 }
@@ -33,8 +33,8 @@ fun packProjectsIntoLines(
     val sortedProjects = sortProject(projects)
 
     for (project in sortedProjects) {
-        val startDate = project.startDate.toLocalDate()
-        val endDate = project.endDate.toLocalDate()
+        val startDate = project.startDate.toUTCLocalDate()
+        val endDate = project.endDate.toUTCLocalDate()
 
         // 이 주에서 해당 프로젝트가 차지하는 index 범위 (e.g. 2~5)
         val startIndex =
@@ -78,8 +78,8 @@ fun getProjectsForWeek(
     val weekEnd = weekDates.last().date
 
     return projects.filter { project ->
-        val start = project.startDate.toLocalDate()
-        val end = project.endDate.toLocalDate()
+        val start = project.startDate.toUTCLocalDate()
+        val end = project.endDate.toUTCLocalDate()
 
         // 주 범위와 프로젝트 기간이 겹치는 경우 포함
         !end.isBefore(weekStart) && !start.isAfter(weekEnd)

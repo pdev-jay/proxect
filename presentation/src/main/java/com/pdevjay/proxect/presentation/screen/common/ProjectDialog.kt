@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.presentation.screen.calendar.component.toLocalDate
+import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.project.ProjectEditContent
 import java.time.LocalDate
@@ -120,7 +120,7 @@ fun ProjectDialog(
                             HorizontalDivider(color = Color.LightGray)
                             Spacer(modifier = Modifier)
                             Text("기간", style = MaterialTheme.typography.titleMedium)
-                            Text("${project.startDate.toLocalDate()} - ${project.endDate.toLocalDate()}")
+                            Text("${project.startDate.toUTCLocalDate()} - ${project.endDate.toUTCLocalDate()}")
                             HorizontalDivider(color = Color.LightGray)
                             Spacer(modifier = Modifier)
                             Text(project.description)
@@ -360,7 +360,7 @@ fun ProjectDialog(
 //                                        HorizontalDivider(color = Color.LightGray)
 //                                        Spacer(modifier = Modifier)
 //                                        Text("기간", style = MaterialTheme.typography.titleMedium)
-//                                        Text("${project.startDate.toLocalDate()} - ${project.endDate.toLocalDate()}")
+//                                        Text("${project.startDate.toUTCLocalDate()} - ${project.endDate.toUTCLocalDate()}")
 //                                        HorizontalDivider(color = Color.LightGray)
 //                                        Spacer(modifier = Modifier)
 //                                        Text(project.description)

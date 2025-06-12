@@ -1,18 +1,34 @@
 package com.pdevjay.proxect.domain.utils
 
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
-// [1] epochMillis → LocalDate (기기 로컬 기준)
-fun Long.toLocalDate(): LocalDate =
+fun Long.toUTCLocalDate(): LocalDate =
     Instant.ofEpochMilli(this)
-        .atZone(ZoneId.systemDefault())
+        .atZone(ZoneOffset.UTC)
         .toLocalDate()
 
-// [2] LocalDate → epochMillis (UTC 기준 자정 millis)
 fun LocalDate.toEpochMillis(): Long =
     this.atStartOfDay(ZoneOffset.UTC)
         .toInstant()
         .toEpochMilli()
+
+fun Long.toDateFromPicker(): LocalDate =
+    Instant.ofEpochMilli(this)
+        .atZone(ZoneOffset.UTC)
+        .toLocalDate()
+
+/**
+ * UTC epoch milli to UTC LocalDate
+ */
+val formatDate: (Long) -> String = {
+    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }
+        .format(Date(it))
+}

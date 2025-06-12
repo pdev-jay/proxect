@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.util.packProjectsIntoLines
 
@@ -55,8 +56,8 @@ fun ProjectBarLineInWeek(
                 val barRanges = mutableListOf<Triple<Project, Int, Int>>()
 
                 line.forEach { project ->
-                    val start = project.startDate.toLocalDate()
-                    val end = project.endDate.toLocalDate()
+                    val start = project.startDate.toUTCLocalDate()
+                    val end = project.endDate.toUTCLocalDate()
 
                     val startIndex = week.indexOfFirst { it.date in start..end }
                     val endIndex = week.indexOfLast { it.date in start..end }
@@ -104,8 +105,8 @@ fun ProjectBarLineInWeek(
 
         // 3. 초과 줄의 프로젝트들 → 날짜별 hiddenCount 계산
         lines.drop(barLines).flatten().forEach { project ->
-            val start = project.startDate.toLocalDate()
-            val end = project.endDate.toLocalDate()
+            val start = project.startDate.toUTCLocalDate()
+            val end = project.endDate.toUTCLocalDate()
             week.forEachIndexed { index, day ->
                 if (day.date in start..end) {
                     hiddenCount[index]++

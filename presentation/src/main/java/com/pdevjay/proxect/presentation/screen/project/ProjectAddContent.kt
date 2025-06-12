@@ -26,14 +26,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.utils.formatDate
+import com.pdevjay.proxect.domain.utils.toDateFromPicker
 import com.pdevjay.proxect.domain.utils.toEpochMillis
-import com.pdevjay.proxect.domain.utils.toLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
 import com.pdevjay.proxect.presentation.screen.common.ColorPickerGrid
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.UUID
 
 @Composable
@@ -55,17 +57,29 @@ fun ProjectAddContent(
     }
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+
+    /**
+     * 현지 날짜 기준 시작, 끝 날짜 utc
+     */
     var startDate by remember { mutableStateOf(LocalDate.now().toEpochMillis()) }
+    /**
+     * 현지 날짜 기준 시작, 끝 날짜 utc
+     */
     var endDate by remember { mutableStateOf(LocalDate.now().toEpochMillis()) }
 
     var showDatePicker by remember { mutableStateOf(false) }
 
     var selectedColor by remember { mutableStateOf(Color(0xFFBDBDBD)) }
 
-    // 날짜 포맷 함수
-    val formatDate: (Long) -> String = {
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
-    }
+//    val formatDate: (Long) -> String = {
+//        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
+//    }
+//    val formatDate: (Long) -> String = { millis ->
+//        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // 로케일은 유지하되
+//        sdf.timeZone = TimeZone.getTimeZone("UTC") // 시간대만 UTC로 설정
+//        sdf.format(Date(millis))
+//    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -213,7 +227,7 @@ fun DatePickerDialogWrapper(
                 ) {
 
                     Text(
-                        text = "${dateRangePickerState.selectedStartDateMillis?.toLocalDate() ?: "Start date"} - ${dateRangePickerState.selectedEndDateMillis?.toLocalDate() ?: "End date"}"
+                        text = "${dateRangePickerState.selectedStartDateMillis?.toDateFromPicker() ?: "Start date"} - ${dateRangePickerState.selectedEndDateMillis?.toDateFromPicker() ?: "End date"}"
                     )
                 }
             },
