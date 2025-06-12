@@ -167,9 +167,9 @@ fun MainScreen() {
                             icon = {
                                 Box(
                                     modifier = Modifier
-                                        .size(48.dp) // 원하는 사이즈로 고정
-                                        .border(2.dp, Color.Gray, RoundedCornerShape(16.dp))
-                                        .padding(8.dp), // 아이콘 여백 조절
+                                        .size(32.dp) // 원하는 사이즈로 고정
+                                        .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
+                                        .padding(2.dp), // 아이콘 여백 조절
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(item.icon, contentDescription = item.label)

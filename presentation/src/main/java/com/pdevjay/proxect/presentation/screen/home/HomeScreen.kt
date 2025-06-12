@@ -26,7 +26,7 @@ import java.time.LocalDate
 
 @Composable
 fun HomeScreen(projectViewModel: ProjectViewModel) {
-    val projects by projectViewModel.projects.collectAsState()
+    val projects by projectViewModel.projectsForHome.collectAsState()
 
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var isModalVisible by remember { mutableStateOf(false) }

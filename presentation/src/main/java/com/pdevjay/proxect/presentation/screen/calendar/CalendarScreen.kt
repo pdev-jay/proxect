@@ -31,6 +31,9 @@ fun CalendarScreen(
 
     val padding = PaddingValues(4.dp)
 
+    LaunchedEffect(calendarState.days) {
+        projectViewModel.loadProjects(calendarState.days.first().date, calendarState.days.last().date) // month 기준 1일
+    }
 
     LaunchedEffect(projects, calendarState.selectedDate) {
         calendarState.selectedDate?.let { date ->

@@ -11,6 +11,7 @@ import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -32,9 +33,6 @@ class ProjectListViewModel @Inject constructor(
 
     private var lastLoadedPastDate: LocalDate = LocalDate.now()
     private var lastLoadedFutureDate: LocalDate = LocalDate.now()
-
-    private var isPastEndReached = false
-    private var isFutureEndReached = false
 
     init {
         loadInitialProjects()
@@ -66,9 +64,8 @@ class ProjectListViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoadingFuture.value = true
 
-            val projects = getFutureProjectsUseCase(lastLoadedFutureDate)
+            val projects = getFutureProjectsUseCase(lastLoadedFutureDate, _visibleProjects.value.last().id)
             if (projects.isEmpty()) {
-                isFutureEndReached = true
             } else {
                 lastLoadedFutureDate = projects.last().startDate.toUTCLocalDate()
                 _visibleProjects.update { current ->
@@ -87,11 +84,10 @@ class ProjectListViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoadingPast.value = true
 
-            val pastProjects = getPastProjectsUseCase(lastLoadedPastDate)
+            val pastProjects = getPastProjectsUseCase(lastLoadedPastDate, _visibleProjects.value.first().id)
             if (pastProjects.isEmpty()) {
-                isPastEndReached = true
             } else {
-                lastLoadedPastDate = pastProjects.last().startDate.toUTCLocalDate()
+                lastLoadedPastDate = pastProjects.first().startDate.toUTCLocalDate()
                 _visibleProjects.update { current ->
                     (pastProjects + current).distinctBy { it.id }
 //                        .sortedBy { it.startDate }

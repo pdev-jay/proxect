@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
 import com.pdevjay.proxect.presentation.screen.common.ColorPickerGrid
@@ -38,10 +39,6 @@ fun ProjectEditContent(
     var selectedColor by remember { mutableStateOf(Color(project.color.toInt())) }
 
     var showDatePicker by remember { mutableStateOf(false) }
-
-    val formatDate: (Long) -> String = {
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
-    }
 
     Column(
         modifier = Modifier

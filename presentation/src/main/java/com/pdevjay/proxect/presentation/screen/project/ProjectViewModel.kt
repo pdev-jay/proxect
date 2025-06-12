@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,34 +20,42 @@ class ProjectViewModel @Inject constructor(
     private val _projects = MutableStateFlow<List<Project>>(emptyList())
     val projects: StateFlow<List<Project>> = _projects.asStateFlow()
 
+    private val _projectsForHome = MutableStateFlow<List<Project>>(emptyList())
+    val projectsForHome: StateFlow<List<Project>> = _projectsForHome.asStateFlow()
+
     init{
-        loadProjects()
+        loadProjectsForHome()
     }
 
-    fun loadProjects() {
+    fun loadProjects(firstDate: LocalDate, lastDate: LocalDate) {
         viewModelScope.launch {
-            _projects.value = useCases.getProjects()
+            _projects.value = useCases.getProjects(firstDate, lastDate)
+        }
+    }
+    fun loadProjectsForHome() {
+        viewModelScope.launch {
+            _projectsForHome.value = useCases.getProjectsForHome()
         }
     }
 
     fun addProject(project: Project) {
         viewModelScope.launch {
             useCases.insertProject(project)
-            loadProjects()
+            loadProjectsForHome()
         }
     }
 
     fun deleteProject(project: Project) {
         viewModelScope.launch {
             useCases.deleteProject(project.id)
-            loadProjects()
+            loadProjectsForHome()
         }
     }
 
     fun updateProject(project: Project) {
         viewModelScope.launch {
             useCases.updateProject(project)
-            loadProjects()
+            loadProjectsForHome()
         }
     }
 }

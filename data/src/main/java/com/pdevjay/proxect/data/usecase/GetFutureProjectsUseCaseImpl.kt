@@ -11,7 +11,7 @@ class GetFutureProjectsUseCaseImpl @Inject constructor(
     private val repository: ProjectRepository
 ): GetFutureProjectsUseCase {
 
-    override suspend fun invoke(after: LocalDate, limit: Int): List<Project> {
-        return repository.getFutureProjects(after, limit)
+    override suspend fun invoke(after: LocalDate, projectId: String?, limit: Int): List<Project> {
+        return repository.getFutureProjects(after, projectId, limit)
     }
 }
