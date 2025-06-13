@@ -23,8 +23,17 @@ class ProjectViewModel @Inject constructor(
     private val _projectsForHome = MutableStateFlow<List<Project>>(emptyList())
     val projectsForHome: StateFlow<List<Project>> = _projectsForHome.asStateFlow()
 
-    init{
-        loadProjectsForHome()
+    init {
+        getAlllProjects()
+//        loadProjectsForHome()
+    }
+
+    fun getAlllProjects() {
+        viewModelScope.launch {
+            val projects = useCases.getAllProjects()
+                .sortedWith(compareBy<Project> { it.startDate }.thenBy { it.id })
+            _projects.value = projects
+        }
     }
 
     fun loadProjects(firstDate: LocalDate, lastDate: LocalDate) {
@@ -32,6 +41,7 @@ class ProjectViewModel @Inject constructor(
             _projects.value = useCases.getProjects(firstDate, lastDate)
         }
     }
+
     fun loadProjectsForHome() {
         viewModelScope.launch {
             _projectsForHome.value = useCases.getProjectsForHome()
@@ -41,21 +51,24 @@ class ProjectViewModel @Inject constructor(
     fun addProject(project: Project) {
         viewModelScope.launch {
             useCases.insertProject(project)
-            loadProjectsForHome()
+            getAlllProjects()
+//            loadProjectsForHome()
         }
     }
 
     fun deleteProject(project: Project) {
         viewModelScope.launch {
             useCases.deleteProject(project.id)
-            loadProjectsForHome()
+            getAlllProjects()
+//            loadProjectsForHome()
         }
     }
 
     fun updateProject(project: Project) {
         viewModelScope.launch {
             useCases.updateProject(project)
-            loadProjectsForHome()
+            getAlllProjects()
+//            loadProjectsForHome()
         }
     }
 }

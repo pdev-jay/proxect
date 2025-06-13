@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.usecase.GetFutureProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetPastProjectsUseCase
+import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
+import com.pdevjay.proxect.domain.usecase.ProjectUseCases
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProjectListViewModel @Inject constructor(
-    private val getPastProjectsUseCase: GetPastProjectsUseCase,
-    private val getFutureProjectsUseCase: GetFutureProjectsUseCase
+    private val useCases: ProjectUseCases
 ) : ViewModel() {
 
     private val _visibleProjects = MutableStateFlow<List<Project>>(emptyList())
@@ -44,7 +45,7 @@ class ProjectListViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoadingPast.value = true
 
-            val projects = getFutureProjectsUseCase(LocalDate.now())
+            val projects = useCases.getFutureProjects(LocalDate.now())
             Log.e("projects", "${LocalDate.now().toEpochMillis()}")
             Log.e("projects", "${LocalDate.now()}")
             _visibleProjects.value = projects
@@ -64,13 +65,13 @@ class ProjectListViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoadingFuture.value = true
 
-            val projects = getFutureProjectsUseCase(lastLoadedFutureDate, _visibleProjects.value.last().id)
+            val projects = useCases.getFutureProjects(lastLoadedFutureDate,if(_visibleProjects.value.isNotEmpty()) _visibleProjects.value.last().id else null)
             if (projects.isEmpty()) {
             } else {
                 lastLoadedFutureDate = projects.last().startDate.toUTCLocalDate()
                 _visibleProjects.update { current ->
                     (current + projects).distinctBy { it.id }
-//                        .sortedBy { it.startDate }
+                        .sortedBy { it.startDate }
                 }
             }
 
@@ -84,17 +85,44 @@ class ProjectListViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoadingPast.value = true
 
-            val pastProjects = getPastProjectsUseCase(lastLoadedPastDate, _visibleProjects.value.first().id)
+            val pastProjects = useCases.getPastProjects(lastLoadedPastDate,if(_visibleProjects.value.isNotEmpty()) _visibleProjects.value.first().id else null)
             if (pastProjects.isEmpty()) {
             } else {
                 lastLoadedPastDate = pastProjects.first().startDate.toUTCLocalDate()
+                val sortedPastProjects = pastProjects.sortedWith(compareBy<Project> { it.startDate }.thenBy { it.id })
                 _visibleProjects.update { current ->
-                    (pastProjects + current).distinctBy { it.id }
-//                        .sortedBy { it.startDate }
+                    (sortedPastProjects + current).distinctBy { it.id }
+                        .sortedBy { it.startDate }
                 }
             }
+            _isLoadingPast.value = false
+        }
+    }
+
+    fun deleteProject(project: Project) {
+        viewModelScope.launch {
+            useCases.deleteProject(project.id)
+            refreshProjects()
+        }
+    }
+
+    fun updateProject(project: Project) {
+        viewModelScope.launch {
+            useCases.updateProject(project)
+            refreshProjects()
+        }
+    }
+
+    fun refreshProjects() {
+        viewModelScope.launch {
+            _isLoadingPast.value = true
+            _isLoadingFuture.value = true
+
+            val projects = useCases.getProjects(lastLoadedPastDate, lastLoadedFutureDate)
+            _visibleProjects.value = projects.sortedWith(compareBy<Project> { it.startDate }.thenBy { it.id })
 
             _isLoadingPast.value = false
+            _isLoadingFuture.value = false
         }
     }
 }

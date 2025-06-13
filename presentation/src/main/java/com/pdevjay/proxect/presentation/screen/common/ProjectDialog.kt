@@ -1,13 +1,10 @@
 package com.pdevjay.proxect.presentation.screen.common
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
@@ -96,18 +93,18 @@ fun ProjectDialog(
         content = { content ->
             when (content) {
                 DialogContentType.ProjectList -> {
-                        if (projects != null) {
-                            for (project in projects) {
-                                ProjectCard(
-                                    project,
-                                    onClick = {
-                                        selectedProject = project
-                                        editedProject = project.copy()
-                                        contentType = DialogContentType.ProjectDetail
-                                    }
-                                )
-                            }
+                    if (projects != null) {
+                        for (project in projects) {
+                            ProjectCard(
+                                project,
+                                onClick = {
+                                    selectedProject = project
+                                    editedProject = project.copy()
+                                    contentType = DialogContentType.ProjectDetail
+                                }
+                            )
                         }
+                    }
                 }
 
                 DialogContentType.ProjectDetail -> {
@@ -116,7 +113,16 @@ fun ProjectDialog(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text("프로젝트", style = MaterialTheme.typography.titleMedium)
-                            Text(project.name)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(project.name)
+                                Text(
+                                    "${project.status.displayName}",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
                             HorizontalDivider(color = Color.LightGray)
                             Spacer(modifier = Modifier)
                             Text("기간", style = MaterialTheme.typography.titleMedium)
@@ -129,12 +135,12 @@ fun ProjectDialog(
                 }
 
                 DialogContentType.EditProject -> {
-                        ProjectEditContent(
-                            project = editedProject!!,
-                            onChange = { changedProject ->
-                                editedProject = changedProject
-                            },
-                        )
+                    ProjectEditContent(
+                        project = editedProject!!,
+                        onChange = { changedProject ->
+                            editedProject = changedProject
+                        },
+                    )
                 }
 
                 DialogContentType.AddProject -> {}

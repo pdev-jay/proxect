@@ -2,6 +2,7 @@ package com.pdevjay.proxect.domain.usecase
 
 data class ProjectUseCases(
     val getProjectsForHome: GetProjectsForHomeUseCase,
+    val getAllProjects: GetAllProjectsUseCase,
     val getProjects: GetProjectsUseCase,
     val insertProject: InsertProjectUseCase,
     val deleteProject: DeleteProjectUseCase,

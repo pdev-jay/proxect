@@ -20,7 +20,7 @@ class ProjectRepositoryImpl @Inject constructor(
 
     override suspend fun getAllProjects(): List<Project> {
         return supabase
-            .postgrest["projects"]
+            .from("projects")
             .select()
             .decodeList<ProjectDto>()
             .map { it.toDomain() }
@@ -110,7 +110,7 @@ class ProjectRepositoryImpl @Inject constructor(
     ): List<Project> {
         return supabase
             .from("projects")
-            .select() {
+            .select {
                 filter {
                     if (projectId != null) {
                         or {
@@ -132,8 +132,9 @@ class ProjectRepositoryImpl @Inject constructor(
                     }
                 }
 
-                order(column = "start_date", order = Order.ASCENDING)
-                order(column = "id", order = Order.ASCENDING)
+                order(column = "start_date", order = Order.DESCENDING)
+                order(column = "id", order = Order.DESCENDING)
+                limit(count = limit.toLong())
             }
             .decodeList<ProjectDto>()
             .map { it.toDomain() }
@@ -146,7 +147,7 @@ class ProjectRepositoryImpl @Inject constructor(
     ): List<Project> {
         return supabase
             .from("projects")
-            .select() {
+            .select {
                 filter {
                     if (projectId != null) {
                         or {

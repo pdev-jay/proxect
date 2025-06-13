@@ -35,82 +35,11 @@ import com.pdevjay.proxect.presentation.navigation.MainNavHost
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.common.DialogTemplate
 import com.pdevjay.proxect.presentation.screen.common.ProjectDialogHeader
+import com.pdevjay.proxect.presentation.screen.lists.ProjectListViewModel
 import com.pdevjay.proxect.presentation.screen.project.ProjectAddContent
 import com.pdevjay.proxect.presentation.screen.project.ProjectAddDialog
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import java.time.LocalDate
-
-//@Composable
-//fun MainScreen(navController: NavHostController, viewModel: MainViewModel = hiltViewModel()) {
-//    val projectList by viewModel.projects.collectAsState()
-//
-//    var name by remember { mutableStateOf("") }
-//    var description by remember { mutableStateOf("") }
-//
-//    Column(modifier = Modifier.padding(16.dp)) {
-//
-//        Text("Add Project", style = MaterialTheme.typography.titleLarge)
-//
-//        OutlinedTextField(
-//            value = name,
-//            onValueChange = { name = it },
-//            label = { Text("Name") },
-//            modifier = Modifier.fillMaxWidth()
-//        )
-//
-//        OutlinedTextField(
-//            value = description,
-//            onValueChange = { description = it },
-//            label = { Text("Description") },
-//            modifier = Modifier.fillMaxWidth()
-//        )
-//
-//        Button(
-//            onClick = {
-//                viewModel.addProject(name, description)
-//                name = ""
-//                description = ""
-//            },
-//            modifier = Modifier.padding(top = 8.dp)
-//        ) {
-//            Text("Add Project")
-//        }
-//
-//        Spacer(modifier = Modifier.height(24.dp))
-//
-//        Text("Projects", style = MaterialTheme.typography.titleLarge)
-//
-//        LazyColumn {
-//            items(projectList) { project ->
-//                ProjectItem(project = project, onDelete = { viewModel.deleteProject(project.id) })
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun ProjectItem(project: Project, onDelete: () -> Unit) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 4.dp)
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .padding(12.dp),
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-//            Column(modifier = Modifier.weight(1f)) {
-//                Text(project.name, style = MaterialTheme.typography.titleMedium)
-//                Text(project.description, style = MaterialTheme.typography.bodySmall)
-//            }
-//
-//            IconButton(onClick = onDelete) {
-//                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
-//            }
-//        }
-//    }
-//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,6 +49,7 @@ fun MainScreen() {
     val currentRoute = currentBackStackEntry?.destination?.route
     var showAddDialog by remember { mutableStateOf(false) }
     val projectViewModel: ProjectViewModel = hiltViewModel()
+    val projectListViewModel: ProjectListViewModel = hiltViewModel()
 
     var projectToAdd by remember { mutableStateOf<Project?>(null) }
 
@@ -195,6 +125,7 @@ fun MainScreen() {
             navController = navController,
             modifier = Modifier.padding(innerPadding),
             projectViewModel = projectViewModel,
+            projectListViewModel = projectListViewModel
         )
     }
 }
