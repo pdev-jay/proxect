@@ -30,9 +30,10 @@ import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.formatDate
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 
 @Composable
-fun ProjectCard(project: Project, onClick: () -> Unit = {}) {
+fun ProjectCard(project: ProjectForPresentation, onClick: () -> Unit = {}) {
     val textColor = if (isColorDark(Color(project.color))) Color.White else Color.Black
 
     Card(

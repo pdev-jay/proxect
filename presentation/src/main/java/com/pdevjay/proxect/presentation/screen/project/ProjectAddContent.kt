@@ -26,6 +26,7 @@ import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
 import com.pdevjay.proxect.presentation.screen.project.component.ColorPickerGrid
 import com.pdevjay.proxect.presentation.screen.project.component.DatePickerDialogWrapper
@@ -37,11 +38,11 @@ import java.util.UUID
 fun ProjectAddContent(
     viewModel: ProjectViewModel,
     onBack: () -> Unit,
-    onChange: (Project) -> Unit
+    onChange: (ProjectForPresentation) -> Unit
 ) {
     var projectToAdd by remember {
-        mutableStateOf<Project>(
-            Project(
+        mutableStateOf<ProjectForPresentation>(
+            ProjectForPresentation(
                 id = UUID.randomUUID().toString(),
                 name = "",
                 description = "",
@@ -140,8 +141,8 @@ fun ProjectAddContent(
         Text("상태", style = MaterialTheme.typography.titleMedium)
 
         ProjectStatusSelector(projectToAdd) {
-
-            onChange(it)
+            projectToAdd = it
+            onChange(projectToAdd)
         }
 
         Spacer(modifier = Modifier)

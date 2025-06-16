@@ -10,13 +10,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import java.time.temporal.ChronoUnit
 
 
-fun sortProject(projects: List<Project>): List<Project> {
+fun sortProject(projects: List<ProjectForPresentation>): List<ProjectForPresentation> {
     return projects.sortedWith(
-        compareBy<Project>(
+        compareBy<ProjectForPresentation>(
             { it.startDate.toUTCLocalDate() } // 날짜 단위로만 비교
         ).thenByDescending {
             ChronoUnit.DAYS.between(it.startDate.toUTCLocalDate(), it.endDate.toUTCLocalDate())
@@ -26,9 +27,9 @@ fun sortProject(projects: List<Project>): List<Project> {
 
 fun packProjectsIntoLines(
     week: List<CalendarDay>,
-    projects: List<Project>
-): List<List<Project>> {
-    val lines = mutableListOf<MutableList<Pair<Project, IntRange>>>() // 줄별로 프로젝트와 index 범위 보관
+    projects: List<ProjectForPresentation>
+): List<List<ProjectForPresentation>> {
+    val lines = mutableListOf<MutableList<Pair<ProjectForPresentation, IntRange>>>() // 줄별로 프로젝트와 index 범위 보관
 
     val sortedProjects = sortProject(projects)
 
@@ -72,8 +73,8 @@ fun packProjectsIntoLines(
 
 fun getProjectsForWeek(
     weekDates: List<CalendarDay>,
-    projects: List<Project>
-): List<Project> {
+    projects: List<ProjectForPresentation>
+): List<ProjectForPresentation> {
     val weekStart = weekDates.first().date
     val weekEnd = weekDates.last().date
 

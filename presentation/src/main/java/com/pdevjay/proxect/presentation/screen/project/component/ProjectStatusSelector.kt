@@ -24,12 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.toEpochMillis
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import java.time.LocalDate
 
 @Composable
 fun ProjectStatusSelector(
-    projectToAdd: Project,
-    onChange: (Project) -> Unit,
+    projectToAdd: ProjectForPresentation,
+    onChange: (ProjectForPresentation) -> Unit,
 ) {
     var selectedStatus by remember { mutableStateOf(ProjectStatus.NOT_STARTED) }
     Row(
@@ -48,7 +49,7 @@ fun ProjectStatusSelector(
                         selectedStatus = status
                         onChange(
                             projectToAdd.copy(
-                                status = status,
+                                status = selectedStatus,
                                 finishedDate = if (selectedStatus == ProjectStatus.COMPLETED) LocalDate.now()
                                     .toEpochMillis() else null
                             )

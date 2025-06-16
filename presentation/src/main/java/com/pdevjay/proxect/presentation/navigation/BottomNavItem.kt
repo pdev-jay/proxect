@@ -15,7 +15,6 @@ sealed class BottomNavItem(
 ) {
     object Dashboard : BottomNavItem("dashboard", Icons.Default.Dashboard, "대시보드")
 
-    //    object Home : BottomNavItem("home", Icons.Default.Home, "홈")
     object Calendar : BottomNavItem("calendar", Icons.Default.CalendarMonth, "달력")
     object Plus : BottomNavItem("plus", Icons.Default.Add, "추가")
     object Lists : BottomNavItem("lists", Icons.AutoMirrored.Filled.FormatListBulleted, "목록")
@@ -24,4 +23,13 @@ sealed class BottomNavItem(
     companion object {
         val items = listOf(Dashboard, Calendar, Plus, Lists, Settings)
     }
+}
+
+sealed class ProjectNavItem(
+    val route: String,
+) {
+    object Add : ProjectNavItem(route = "add_project")
+    object Edit : ProjectNavItem(route = "edit_project")
+    object Detail : ProjectNavItem(route = "detail_project")
+
 }

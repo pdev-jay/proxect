@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
 import com.pdevjay.proxect.presentation.screen.project.component.ColorPickerGrid
 import com.pdevjay.proxect.presentation.screen.project.component.DatePickerDialogWrapper
@@ -33,8 +34,8 @@ import java.time.LocalDate
 
 @Composable
 fun ProjectEditContent(
-    project: Project,
-    onChange: (Project) -> Unit,
+    project: ProjectForPresentation,
+    onChange: (ProjectForPresentation) -> Unit,
 ) {
     var title by remember { mutableStateOf(project.name) }
     var description by remember { mutableStateOf(project.description) }

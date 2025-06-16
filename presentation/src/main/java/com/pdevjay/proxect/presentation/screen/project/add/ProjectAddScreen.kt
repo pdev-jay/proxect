@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen.settings
+package com.pdevjay.proxect.presentation.screen.project.add
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,10 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun SettingsScreen(
+fun ProjectAddScreen(
     navController: NavController,
 ) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("세팅 화면")
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Add Project Screen")
     }
 }

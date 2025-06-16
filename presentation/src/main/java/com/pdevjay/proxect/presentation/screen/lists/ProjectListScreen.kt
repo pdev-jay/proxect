@@ -1,6 +1,5 @@
 package com.pdevjay.proxect.presentation.screen.lists
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,8 +28,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
 import com.pdevjay.proxect.presentation.screen.common.ProjectDialog
@@ -40,14 +41,17 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
 @Composable
-fun ProjectListScreen(projectListViewModel: ProjectListViewModel = hiltViewModel()) {
+fun ProjectListScreen(
+    navController: NavController,
+    projectListViewModel: ProjectListViewModel = hiltViewModel()
+) {
     val projects by projectListViewModel.visibleProjects.collectAsState()
     val isLoadingPast by projectListViewModel.isLoadingPast.collectAsState()
     val isLoadingFuture by projectListViewModel.isLoadingFuture.collectAsState()
 
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var isModalVisible by remember { mutableStateOf(false) }
-    var selectedProject by remember { mutableStateOf<Project?>(null) }
+    var selectedProject by remember { mutableStateOf<ProjectForPresentation?>(null) }
 
     val topState = rememberPullToRefreshState()
     val bottomState = rememberPullToRefreshState()
@@ -64,15 +68,6 @@ fun ProjectListScreen(projectListViewModel: ProjectListViewModel = hiltViewModel
     LaunchedEffect(isLoadingPast) {
 
         if (!isLoadingPast) {
-            Log.e("count", "${projects.size}")
-            Log.e("count", "$lastCount")
-            Log.e("count", "$savedOffset")
-            Log.e("count", "newItem : ${projects.size - lastCount}")
-            Log.e("count", "savedIndex : $savedIndex")
-            Log.e(
-                "count",
-                "newIndex : ${savedIndex + (projects.size - lastCount).coerceAtLeast(0)}"
-            )
             if (lastCount == 0) {
                 listState.scrollToItem(0)
             } else {
@@ -96,6 +91,7 @@ fun ProjectListScreen(projectListViewModel: ProjectListViewModel = hiltViewModel
 
     if (isModalVisible && selectedDate != null) {
         ProjectDialog(
+            navController = navController,
             initialContentType = DialogContentType.ProjectDetail,
             selectedDate = selectedDate!!,
             initialSelectedProject = selectedProject,

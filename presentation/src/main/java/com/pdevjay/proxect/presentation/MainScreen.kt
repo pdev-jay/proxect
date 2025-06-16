@@ -1,10 +1,7 @@
 package com.pdevjay.proxect.presentation
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +11,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -29,17 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.presentation.data.ProjectAddNav
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.navigation.BottomNavItem
 import com.pdevjay.proxect.presentation.navigation.MainNavHost
-import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
-import com.pdevjay.proxect.presentation.screen.common.DialogTemplate
-import com.pdevjay.proxect.presentation.screen.common.ProjectDialogHeader
 import com.pdevjay.proxect.presentation.screen.lists.ProjectListViewModel
-import com.pdevjay.proxect.presentation.screen.project.ProjectAddContent
 import com.pdevjay.proxect.presentation.screen.project.ProjectAddDialog
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +43,7 @@ fun MainScreen() {
     val projectViewModel: ProjectViewModel = hiltViewModel()
     val projectListViewModel: ProjectListViewModel = hiltViewModel()
 
-    var projectToAdd by remember { mutableStateOf<Project?>(null) }
+    var projectToAdd by remember { mutableStateOf<ProjectForPresentation?>(null) }
 
     if (showAddDialog) {
         ProjectAddDialog(
@@ -85,6 +77,7 @@ fun MainScreen() {
             )
         },
         bottomBar = {
+            //            if (currentRoute != ProjectNavItem.Add.route && currentRoute != ProjectNavItem.Edit.route && currentRoute != ProjectNavItem.Detail.route) {
             NavigationBar {
                 BottomNavItem.items.forEach { item ->
                     if (item == BottomNavItem.Plus) {
@@ -92,7 +85,8 @@ fun MainScreen() {
                             selected = false,
                             onClick = {
                                 // 화면 전환 없이 액션만
-                                showAddDialog = true
+//                                    showAddDialog = true
+                                navController.navigate(ProjectAddNav)
                             },
                             icon = {
                                 Box(

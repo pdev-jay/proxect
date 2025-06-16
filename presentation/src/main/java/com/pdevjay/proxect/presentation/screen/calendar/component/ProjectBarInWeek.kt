@@ -23,13 +23,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.util.packProjectsIntoLines
 
 @Composable
 fun ProjectBarLineInWeek(
     week: List<CalendarDay>,
-    lineProjects: List<Project>,
+    lineProjects: List<ProjectForPresentation>,
     restHeight: Dp
 ) {
     val maxLines = 4
@@ -53,7 +54,7 @@ fun ProjectBarLineInWeek(
                     .height(barHeight)
                     .padding(vertical = verticalPadding)
             ) {
-                val barRanges = mutableListOf<Triple<Project, Int, Int>>()
+                val barRanges = mutableListOf<Triple<ProjectForPresentation, Int, Int>>()
 
                 line.forEach { project ->
                     val start = project.startDate.toUTCLocalDate()

@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarTopBar
 import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarWeekGrid
@@ -21,6 +22,7 @@ import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 
 @Composable
 fun CalendarScreen(
+    navController: NavController,
     calendarViewModel: CalendarViewModel = hiltViewModel(),
     projectViewModel: ProjectViewModel = hiltViewModel()
 ) {
@@ -32,7 +34,10 @@ fun CalendarScreen(
     val padding = PaddingValues(4.dp)
 
     LaunchedEffect(calendarState.days) {
-        projectViewModel.loadProjects(calendarState.days.first().date, calendarState.days.last().date) // month 기준 1일
+        projectViewModel.loadProjects(
+            calendarState.days.first().date,
+            calendarState.days.last().date
+        ) // month 기준 1일
     }
 
     LaunchedEffect(projects, calendarState.selectedDate) {
@@ -47,6 +52,7 @@ fun CalendarScreen(
 
     if (isModalVisible && calendarState.selectedDate != null) {
         ProjectDialog(
+            navController = navController,
             selectedDate = calendarState.selectedDate!!,
             projects = calendarState.projects,
             onDismiss = {

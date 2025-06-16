@@ -1,5 +1,6 @@
 package com.pdevjay.proxect.presentation.screen.home
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,13 +11,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,65 +31,139 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.toEpochMillis
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.common.BasicContainer
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.temporal.TemporalAdjusters
+
+data class DashboardUiState(
+    val filteredProjects: List<ProjectForPresentation> = emptyList(),
+    val isLoading: Boolean = false,
+    val message: String = "",
+    val emptyMessage: String = "",
+    val projectCount: Int = 0
+)
+
+data class Quadruple<A, B, C, D>(
+    val first: A,
+    val second: B,
+    val third: C,
+    val fourth: D
+)
 
 enum class ProjectFilter(val code: Int, val displayName: String) {
-    DUE_TODAY(0, "오늘 마감"),
-    DUE_THIS_WEEK(1, "이번주 마감"),
-    UPCOMING(2, "예정"),
-    COMPLETED(3, "완료");
+    NEEDS_ATTENTION(0, "마감 임박"),   // 오늘 확인이 필요한 우선순위
+    OVERDUE(1, "지연"),              // 놓친 것부터 처리해야 하므로 위에
+    IN_PROGRESS(2, "진행 중"),        // 주기적으로 관리되는 핵심 상태
+    UPCOMING(3, "예정"),             // 다음 예정 확인
+    COMPLETED(4, "완료");             // 마지막에 넣어도 무방 (아카이브 느낌)
+
 
     companion object {
         fun fromCode(code: Int): ProjectFilter =
-            entries.firstOrNull { it.code == code } ?: DUE_TODAY
+            entries.firstOrNull { it.code == code } ?: IN_PROGRESS
     }
 }
 
 @Composable
 fun DashboardScreen(
+    navController: NavController,
     projectViewModel: ProjectViewModel
 ) {
     val projects by projectViewModel.projects.collectAsState()
-    var selectedFilter by remember { mutableStateOf(ProjectFilter.DUE_TODAY) }
+    var selectedFilter by remember { mutableStateOf(ProjectFilter.IN_PROGRESS) }
 
-    val today = remember { LocalDate.now().toEpochMillis() }
-    var dueTodayCount = remember { projects.count { it.endDate == today } }
-    val filteredProjects = remember(projects, selectedFilter) {
-        when (selectedFilter) {
-            ProjectFilter.DUE_TODAY -> {
-                dueTodayCount = projects.count { it.endDate == today }
-                projects.filter {
-                    it.endDate == today
-                }
-            }
+    var uiState by remember {
+        mutableStateOf(
+            DashboardUiState(
+                emptyList(),
+                false,
+                "",
+                "",
+                0
+            )
+        )
+    }
 
-            ProjectFilter.DUE_THIS_WEEK -> {
-                val endOfWeek = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
-                    .toEpochMillis()
-                projects.filter {
-                    it.endDate in today..endOfWeek
-                }
-            }
+    val today = LocalDate.now().toEpochMillis()
 
-            ProjectFilter.UPCOMING -> {
-                projects.filter {
-                    it.startDate > today && it.status != ProjectStatus.COMPLETED
+    LaunchedEffect(selectedFilter, projects) {
+        uiState = DashboardUiState(isLoading = true)
+
+        val (filtered, count, message, emptyMessage) = when (selectedFilter) {
+            ProjectFilter.IN_PROGRESS -> {
+                val filtered = projects.filter {
+                    it.startDate <= today && it.endDate >= today &&
+                            it.status != ProjectStatus.COMPLETED &&
+                            it.status != ProjectStatus.NOT_STARTED
                 }
+                Quadruple(
+                    filtered,
+                    filtered.size,
+                    "${filtered.size}개의 프로젝트가 진행 중입니다!",
+                    "현재 진행 중인 프로젝트가 없습니다."
+                )
             }
 
             ProjectFilter.COMPLETED -> {
-                projects.filter {
-                    it.status == ProjectStatus.COMPLETED
+                val filtered = projects.filter { it.status == ProjectStatus.COMPLETED }
+                Quadruple(
+                    filtered,
+                    filtered.size,
+                    "${filtered.size}개의 프로젝트가 완료되었습니다!",
+                    "완료된 프로젝트가 없습니다."
+                )
+            }
+
+            ProjectFilter.UPCOMING -> {
+                val filtered = projects.filter {
+                    it.startDate > today && it.status != ProjectStatus.COMPLETED
                 }
+                Quadruple(
+                    filtered,
+                    filtered.size,
+                    "${filtered.size}개의 프로젝트가 예정되어 있습니다!",
+                    "예정된 프로젝트가 없습니다."
+                )
+            }
+
+            ProjectFilter.NEEDS_ATTENTION -> {
+                val oneWeek = LocalDate.now().plusWeeks(1).toEpochMillis()
+                val filtered = projects.filter {
+                    it.endDate in today..oneWeek && it.status != ProjectStatus.COMPLETED
+                }
+                Quadruple(
+                    filtered,
+                    filtered.size,
+                    "${filtered.size}개의 프로젝트가 곧 마감됩니다!",
+                    "마감 임박한 프로젝트가 없습니다."
+                )
+            }
+
+            ProjectFilter.OVERDUE -> {
+                val filtered = projects.filter {
+                    it.endDate < today && it.status != ProjectStatus.COMPLETED
+                }
+                Quadruple(
+                    filtered,
+                    filtered.size,
+                    "${filtered.size}개의 프로젝트가 지연됐습니다!",
+                    "지연된 프로젝트가 없습니다."
+                )
             }
         }
+
+        uiState = DashboardUiState(
+            filtered,
+            isLoading = false,
+            message,
+            emptyMessage,
+            count
+        )
     }
 
     Column(
@@ -95,14 +173,18 @@ fun DashboardScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
-            text = "Welcome!",
+            text = "${LocalDate.now()}",
             style = MaterialTheme.typography.headlineLarge
         )
 
-        Text(
-            text = "${dueTodayCount} projects due today!",
-            style = MaterialTheme.typography.headlineSmall
-        )
+        AnimatedContent(
+            targetState = uiState
+        ) { state ->
+            Text(
+                text = state.message,
+                style = MaterialTheme.typography.headlineSmall
+            )
+        }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = Color.LightGray)
 
@@ -146,15 +228,28 @@ fun DashboardScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             AnimatedContent(
-                targetState = filteredProjects,
-                modifier = Modifier.fillMaxSize()
+                targetState = uiState,
+                modifier = Modifier.fillMaxSize(),
             ) { projectState ->
-                LazyColumn {
-                    items(projectState) { project ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ProjectCard(project)
+                Log.e("projectState", "size : ${projectState.filteredProjects.size}")
+                if (projectState.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                } else if (projectState.filteredProjects.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            "${projectState.emptyMessage}"
+                        )
+                    }
+                } else {
+                    LazyColumn {
+                        items(projectState.filteredProjects) { project ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                ProjectCard(project) {
+
+                                }
+                            }
                         }
                     }
                 }

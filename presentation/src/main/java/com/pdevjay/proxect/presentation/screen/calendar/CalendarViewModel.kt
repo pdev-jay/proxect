@@ -3,6 +3,7 @@ package com.pdevjay.proxect.presentation.screen.calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
@@ -65,7 +66,7 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
         _state.update { it.copy(selectedDate = date) }
     }
 
-    fun setProjectsInDate(projects: List<Project> = emptyList()){
+    fun setProjectsInDate(projects: List<ProjectForPresentation> = emptyList()){
         val sortedProjects = sortProject(projects)
 
         _state.update { it.copy(projects = sortedProjects) }

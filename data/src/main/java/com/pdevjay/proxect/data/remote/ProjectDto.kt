@@ -18,9 +18,23 @@ data class ProjectDto(
 )
 
 fun ProjectDto.toDomain() = Project(
-    id, name, description, startDate, endDate, color = color, status = ProjectStatus.fromCode(status), finishedDate = finishedDate
+    id,
+    name,
+    description,
+    startDate,
+    endDate,
+    color = color,
+    status = ProjectStatus.fromCode(status),
+    finishedDate = finishedDate
 )
 
 fun Project.toDto() = ProjectDto(
-    id, name, description, startDate, endDate, color = color, status = status.code, finishedDate = finishedDate
+    id,
+    name,
+    description,
+    startDate,
+    endDate,
+    color = color,
+    status = status.code,
+    finishedDate = finishedDate
 )

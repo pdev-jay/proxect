@@ -8,6 +8,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.common.DialogTemplate
 import com.pdevjay.proxect.presentation.screen.common.ProjectDialogHeader
@@ -15,9 +16,9 @@ import java.time.LocalDate
 
 @Composable
 fun ProjectAddDialog(
-    projectToAdd: Project?,
+    projectToAdd: ProjectForPresentation?,
     onDismiss: () -> Unit,
-    onChange: (Project) -> Unit,
+    onChange: (ProjectForPresentation) -> Unit,
     onConfirm: () -> Unit,
     viewModel: ProjectViewModel
 ) {

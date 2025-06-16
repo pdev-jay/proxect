@@ -22,29 +22,32 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.pdevjay.proxect.domain.model.Project
+import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
+import com.pdevjay.proxect.presentation.data.toEditNav
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.project.ProjectEditContent
 import java.time.LocalDate
 
 @Composable
 fun ProjectDialog(
+    navController: NavController,
     initialContentType: DialogContentType? = DialogContentType.ProjectList,
     selectedDate: LocalDate,
-    initialSelectedProject: Project? = null,
-    projects: List<Project>? = null,
+    initialSelectedProject: ProjectForPresentation? = null,
+    projects: List<ProjectForPresentation>? = null,
     onDismiss: () -> Unit,
-    onDelete: (Project) -> Unit = {},
-    onUpdate: (Project) -> Unit = {}
+    onDelete: (ProjectForPresentation) -> Unit = {},
+    onUpdate: (ProjectForPresentation) -> Unit = {}
 ) {
     var contentType by remember {
         mutableStateOf<DialogContentType>(
             initialContentType ?: DialogContentType.ProjectList
         )
     }
-    var selectedProject by remember { mutableStateOf<Project?>(initialSelectedProject) }
-    var editedProject by remember { mutableStateOf<Project?>(selectedProject?.copy()) }
+    var selectedProject by remember { mutableStateOf<ProjectForPresentation?>(initialSelectedProject) }
+    var editedProject by remember { mutableStateOf<ProjectForPresentation?>(selectedProject?.copy()) }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
     var showUpdateConfirmDialog by remember { mutableStateOf(false) }
     var showUpdateCancelDialog by remember { mutableStateOf(false) }
@@ -69,7 +72,14 @@ fun ProjectDialog(
                     onDismiss()
                 },
                 onEdit = {
-                    contentType = DialogContentType.EditProject
+                    if (selectedProject != null) {
+                        navController.navigate(
+                            selectedProject!!.toEditNav()
+                        )
+                    }
+                    onDismiss()
+//                    contentType = DialogContentType.EditProject
+
                 },
                 onConfirmEdit = {
                     showUpdateConfirmDialog = true

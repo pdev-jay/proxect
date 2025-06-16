@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen.settings
+package com.pdevjay.proxect.presentation.screen.project.edit
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,12 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 
 @Composable
-fun SettingsScreen(
+fun ProjectEditScreen(
     navController: NavController,
+    project: ProjectForPresentation
 ) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("세팅 화면")
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Edit Project Screen")
     }
 }

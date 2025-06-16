@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
 import com.pdevjay.proxect.presentation.screen.calendar.util.getProjectsForWeek
@@ -41,7 +42,7 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun CalendarWeekGrid(
     calendarState: CalendarState,
-    projects: List<Project>,
+    projects: List<ProjectForPresentation>,
     onDayClick: (CalendarDay) -> Unit
 ) {
     val days = calendarState.days
@@ -135,7 +136,7 @@ fun CalendarWeekGrid(
                             }
 
                             val sortedProjects = dayProjects.sortedWith(
-                                compareBy<Project>(
+                                compareBy<ProjectForPresentation>(
                                     { it.startDate.toUTCLocalDate() } // 날짜 단위로만 비교
                                 ).thenByDescending {
                                     ChronoUnit.DAYS.between(it.startDate.toUTCLocalDate(), it.endDate.toUTCLocalDate())

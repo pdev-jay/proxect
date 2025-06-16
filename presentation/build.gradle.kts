@@ -5,6 +5,7 @@ plugins {
 
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.serialization") // 또는 최신 버전
 }
 
 android {
@@ -77,4 +78,6 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     implementation(project(":domain"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1") // 또는 최신 버전
 }

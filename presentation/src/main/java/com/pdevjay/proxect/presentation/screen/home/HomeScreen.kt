@@ -15,8 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.pdevjay.proxect.domain.model.Project
+import androidx.navigation.compose.rememberNavController
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
+import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
 import com.pdevjay.proxect.presentation.screen.common.ProjectDialog
@@ -30,7 +31,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
 
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var isModalVisible by remember { mutableStateOf(false) }
-    var selectedProject by remember { mutableStateOf<Project?>(null) }
+    var selectedProject by remember { mutableStateOf<ProjectForPresentation?>(null) }
 
     val today = remember { LocalDate.now() }
 
@@ -54,6 +55,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
 
     if (isModalVisible && selectedDate != null) {
         ProjectDialog(
+            navController = rememberNavController(),
             initialContentType = DialogContentType.ProjectDetail,
             selectedDate = selectedDate!!,
             initialSelectedProject = selectedProject,
@@ -85,7 +87,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
                 )
             }
             items(todayProjects) { project ->
-                ProjectCard(project = project){
+                ProjectCard(project = project) {
                     selectedProject = project
                     selectedDate = project.startDate.toUTCLocalDate()
                     isModalVisible = true
@@ -102,7 +104,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
                 )
             }
             items(futureProjects) { project ->
-                ProjectCard(project = project){
+                ProjectCard(project = project) {
                     selectedProject = project
                     selectedDate = project.startDate.toUTCLocalDate()
                     isModalVisible = true
@@ -119,7 +121,7 @@ fun HomeScreen(projectViewModel: ProjectViewModel) {
                 )
             }
             items(otherProjects) { project ->
-                ProjectCard(project = project){
+                ProjectCard(project = project) {
                     selectedProject = project
                     selectedDate = project.startDate.toUTCLocalDate()
                     isModalVisible = true
