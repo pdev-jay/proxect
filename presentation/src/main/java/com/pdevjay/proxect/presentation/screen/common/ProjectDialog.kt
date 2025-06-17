@@ -7,13 +7,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +26,9 @@ import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.data.toEditNav
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.project.ProjectEditContent
+import com.pdevjay.proxect.presentation.screen.project.component.ConfirmDeleteDialog
+import com.pdevjay.proxect.presentation.screen.project.component.ConfirmEditCancelDialog
+import com.pdevjay.proxect.presentation.screen.project.component.ConfirmEditDialog
 import java.time.LocalDate
 
 @Composable
@@ -37,6 +38,7 @@ fun ProjectDialog(
     selectedDate: LocalDate,
     initialSelectedProject: ProjectForPresentation? = null,
     projects: List<ProjectForPresentation>? = null,
+    onClickProjectCard: (ProjectForPresentation) -> Unit = {},
     onDismiss: () -> Unit,
     onDelete: (ProjectForPresentation) -> Unit = {},
     onUpdate: (ProjectForPresentation) -> Unit = {}
@@ -108,9 +110,7 @@ fun ProjectDialog(
                             ProjectCard(
                                 project,
                                 onClick = {
-                                    selectedProject = project
-                                    editedProject = project.copy()
-                                    contentType = DialogContentType.ProjectDetail
+                                    onClickProjectCard(project)
                                 }
                             )
                         }
@@ -475,75 +475,3 @@ fun ProjectDialog(
 //}
 
 
-@Composable
-fun ConfirmDeleteDialog(
-    projectName: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("프로젝트 삭제") },
-        text = { Text("\"$projectName\" 프로젝트를 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.") },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("삭제", color = MaterialTheme.colorScheme.error)
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("취소")
-            }
-        }
-    )
-}
-
-@Composable
-fun ConfirmEditDialog(
-    projectName: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("프로젝트 수정") },
-        text = {
-            Text("\"$projectName\" 프로젝트의 변경 사항을 저장하시겠습니까?")
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("저장", color = MaterialTheme.colorScheme.primary)
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("취소")
-            }
-        }
-    )
-}
-
-@Composable
-fun ConfirmEditCancelDialog(
-    projectName: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("프로젝트 수정 취소") },
-        text = {
-            Text("\"$projectName\" 프로젝트의 변경 사항을 취소하시겠습니까?")
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("확인", color = MaterialTheme.colorScheme.primary)
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("취소")
-            }
-        }
-    )
-}

@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
@@ -41,7 +40,7 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
 @Composable
-fun ProjectListScreen(
+fun ProjectSearchScreen(
     navController: NavController,
     projectListViewModel: ProjectListViewModel = hiltViewModel()
 ) {
@@ -72,7 +71,7 @@ fun ProjectListScreen(
                 listState.scrollToItem(0)
             } else {
                 listState.scrollToItem(
-                    savedIndex + (projects.size - lastCount).coerceAtLeast(0) - 1,
+                    savedIndex + (projects.size - lastCount).coerceAtLeast(0),
                     savedOffset
                 )
             }

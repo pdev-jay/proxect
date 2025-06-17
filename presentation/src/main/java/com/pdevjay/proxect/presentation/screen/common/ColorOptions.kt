@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.screen.calendar.util
+package com.pdevjay.proxect.presentation.screen.common
 
 import androidx.compose.ui.graphics.Color
 

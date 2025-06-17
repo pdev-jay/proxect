@@ -22,11 +22,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
-import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
+import com.pdevjay.proxect.presentation.screen.common.colorOptions
 import com.pdevjay.proxect.presentation.screen.project.component.ColorPickerGrid
 import com.pdevjay.proxect.presentation.screen.project.component.DatePickerDialogWrapper
 import com.pdevjay.proxect.presentation.screen.project.component.ProjectStatusSelector
@@ -93,8 +92,8 @@ fun ProjectEditContent(
 
         Text("상태", style = MaterialTheme.typography.titleMedium)
 
-        ProjectStatusSelector(project) {
-            onChange(it)
+        ProjectStatusSelector(selectedStatus) { newStatus ->
+            selectedStatus = newStatus
         }
 
 
@@ -113,6 +112,7 @@ fun ProjectEditContent(
     if (showDatePicker) {
         DatePickerDialogWrapper(
             initialStartDate = startDate,
+            initialEndDate = endDate,
             onDismiss = { showDatePicker = false },
             onDateRangeSelected = {
                 startDate = it.first ?: LocalDate.now().toEpochMillis()

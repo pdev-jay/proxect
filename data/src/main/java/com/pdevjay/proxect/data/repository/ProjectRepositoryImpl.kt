@@ -8,7 +8,6 @@ import com.pdevjay.proxect.domain.repository.ProjectRepository
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
-import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Order
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -85,7 +84,7 @@ class ProjectRepositoryImpl @Inject constructor(
     override suspend fun insertProject(project: Project) {
         val dto = project.toDto()
         supabase
-            .postgrest["projects"]
+            .from("projects")
             .insert(dto)
     }
 

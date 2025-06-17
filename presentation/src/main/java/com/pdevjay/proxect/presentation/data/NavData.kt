@@ -50,4 +50,19 @@ data class ProjectEditNav(
 }
 
 @Serializable
+object ProjectListNav
+
+@Serializable
 object ProjectAddNav
+
+@Serializable
+object ProjectDashboardNav
+
+@Serializable
+object ProjectCalendarNav
+
+@Serializable
+object ProjectSearchNav
+
+@Serializable
+object ProjectSettingsNav

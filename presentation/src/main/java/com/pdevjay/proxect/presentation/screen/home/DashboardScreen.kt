@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.toEpochMillis
+import com.pdevjay.proxect.presentation.LocalTopBarSetter
+import com.pdevjay.proxect.presentation.TopAppBarData
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.common.BasicContainer
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
@@ -72,7 +74,8 @@ enum class ProjectFilter(val code: Int, val displayName: String) {
 @Composable
 fun DashboardScreen(
     navController: NavController,
-    projectViewModel: ProjectViewModel
+    projectViewModel: ProjectViewModel,
+    onNavigateToProjectDetail: (ProjectForPresentation) -> Unit = {}
 ) {
     val projects by projectViewModel.projects.collectAsState()
     var selectedFilter by remember { mutableStateOf(ProjectFilter.IN_PROGRESS) }
@@ -166,6 +169,20 @@ fun DashboardScreen(
         )
     }
 
+    val setTopBar = LocalTopBarSetter.current
+
+    LaunchedEffect(Unit) {
+        setTopBar(
+            TopAppBarData(
+                title = "Proxect",
+                showBack = false,
+                actions = {
+                }
+            )
+        )
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -247,7 +264,7 @@ fun DashboardScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 ProjectCard(project) {
-
+                                    onNavigateToProjectDetail(project)
                                 }
                             }
                         }

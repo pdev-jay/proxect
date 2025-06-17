@@ -21,18 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.model.ProjectStatus
-import com.pdevjay.proxect.domain.utils.toEpochMillis
-import com.pdevjay.proxect.presentation.data.ProjectForPresentation
-import java.time.LocalDate
 
 @Composable
 fun ProjectStatusSelector(
-    projectToAdd: ProjectForPresentation,
-    onChange: (ProjectForPresentation) -> Unit,
+    selectedStatus: ProjectStatus,
+    onChange: (ProjectStatus) -> Unit,
 ) {
-    var selectedStatus by remember { mutableStateOf(ProjectStatus.NOT_STARTED) }
+    var newStatus by remember { mutableStateOf(selectedStatus) }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -46,17 +43,11 @@ fun ProjectStatusSelector(
                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
-                        selectedStatus = status
-                        onChange(
-                            projectToAdd.copy(
-                                status = selectedStatus,
-                                finishedDate = if (selectedStatus == ProjectStatus.COMPLETED) LocalDate.now()
-                                    .toEpochMillis() else null
-                            )
-                        )
+                        newStatus = status
+                        onChange(newStatus)
                     }
                     .background(
-                        color = if (status == selectedStatus)
+                        color = if (status == newStatus)
                             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
                         else
                             Color.Transparent

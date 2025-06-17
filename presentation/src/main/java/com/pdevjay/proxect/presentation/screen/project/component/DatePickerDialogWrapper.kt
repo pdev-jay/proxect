@@ -19,12 +19,13 @@ import com.pdevjay.proxect.domain.utils.toDateFromPicker
 @Composable
 fun DatePickerDialogWrapper(
     initialStartDate: Long,
+    initialEndDate: Long,
     onDismiss: () -> Unit,
     onDateRangeSelected: (Pair<Long?, Long?>) -> Unit = {}
 ) {
     val dateRangePickerState = rememberDateRangePickerState(
         initialSelectedStartDateMillis = initialStartDate,
-        initialSelectedEndDateMillis = initialStartDate,
+        initialSelectedEndDateMillis = initialEndDate,
     )
 
     DatePickerDialog(

@@ -22,12 +22,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
-import com.pdevjay.proxect.presentation.screen.calendar.util.colorOptions
+import com.pdevjay.proxect.presentation.screen.common.colorOptions
 import com.pdevjay.proxect.presentation.screen.project.component.ColorPickerGrid
 import com.pdevjay.proxect.presentation.screen.project.component.DatePickerDialogWrapper
 import com.pdevjay.proxect.presentation.screen.project.component.ProjectStatusSelector
@@ -69,15 +68,6 @@ fun ProjectAddContent(
     var selectedColor by remember { mutableStateOf(Color(0xFFBDBDBD)) }
 
     var selectedStatus by remember { mutableStateOf(ProjectStatus.NOT_STARTED) }
-
-//    val formatDate: (Long) -> String = {
-//        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
-//    }
-//    val formatDate: (Long) -> String = { millis ->
-//        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // 로케일은 유지하되
-//        sdf.timeZone = TimeZone.getTimeZone("UTC") // 시간대만 UTC로 설정
-//        sdf.format(Date(millis))
-//    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -140,9 +130,8 @@ fun ProjectAddContent(
         Spacer(modifier = Modifier)
         Text("상태", style = MaterialTheme.typography.titleMedium)
 
-        ProjectStatusSelector(projectToAdd) {
-            projectToAdd = it
-            onChange(projectToAdd)
+        ProjectStatusSelector(selectedStatus) { newStatus ->
+            selectedStatus = newStatus
         }
 
         Spacer(modifier = Modifier)
@@ -168,6 +157,7 @@ fun ProjectAddContent(
     if (showDatePicker) {
         DatePickerDialogWrapper(
             initialStartDate = startDate,
+            initialEndDate = endDate,
             onDismiss = { showDatePicker = false },
             onDateRangeSelected = {
                 startDate = it.first ?: LocalDate.now().toEpochMillis()

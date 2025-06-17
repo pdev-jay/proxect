@@ -1,18 +1,11 @@
 package com.pdevjay.proxect.presentation.screen.calendar
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.pdevjay.proxect.domain.model.Project
-import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarState
-import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
-import com.pdevjay.proxect.presentation.screen.calendar.util.sortProject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -62,14 +55,16 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
         generateMonthDays(_state.value.yearMonth.minusMonths(1))
     }
 
-    fun setSelectedDate(date: LocalDate?) {
-        _state.update { it.copy(selectedDate = date) }
-    }
-
-    fun setProjectsInDate(projects: List<ProjectForPresentation> = emptyList()){
-        val sortedProjects = sortProject(projects)
-
-        _state.update { it.copy(projects = sortedProjects) }
-    }
+//    fun setSelectedDate(
+//        date: LocalDate?
+//    ) {
+//        _state.update { it.copy(selectedDate = date) }
+//    }
+//
+//    fun setProjectsInDate(projects: List<ProjectForPresentation> = emptyList()) {
+//        val sortedProjects = sortProject(projects)
+//
+//        _state.update { it.copy(projects = sortedProjects) }
+//    }
 }
 
