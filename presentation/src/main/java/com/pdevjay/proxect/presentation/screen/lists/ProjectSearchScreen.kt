@@ -31,9 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
-import com.pdevjay.proxect.presentation.screen.calendar.model.DialogContentType
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
-import com.pdevjay.proxect.presentation.screen.common.ProjectDialog
 import kotlinx.coroutines.FlowPreview
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -88,24 +86,24 @@ fun ProjectSearchScreen(
             }
     }
 
-    if (isModalVisible && selectedDate != null) {
-        ProjectDialog(
-            navController = navController,
-            initialContentType = DialogContentType.ProjectDetail,
-            selectedDate = selectedDate!!,
-            initialSelectedProject = selectedProject,
-            onDismiss = {
-                isModalVisible = false
-            },
-            onDelete = {
-                projectListViewModel.deleteProject(it)
-            },
-            onUpdate = {
-                projectListViewModel.updateProject(it)
-            }
-        )
-
-    }
+//    if (isModalVisible && selectedDate != null) {
+//        ProjectDialog(
+//            navController = navController,
+//            initialContentType = DialogContentType.ProjectDetail,
+//            selectedDate = selectedDate!!,
+//            initialSelectedProject = selectedProject,
+//            onDismiss = {
+//                isModalVisible = false
+//            },
+//            onDelete = {
+//                projectListViewModel.deleteProject(it)
+//            },
+//            onUpdate = {
+//                projectListViewModel.updateProject(it)
+//            }
+//        )
+//
+//    }
 
 
     PullToRefreshBox(

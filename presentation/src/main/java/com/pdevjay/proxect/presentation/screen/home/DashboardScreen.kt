@@ -37,6 +37,7 @@ import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.LocalTopBarSetter
 import com.pdevjay.proxect.presentation.TopAppBarData
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
+import com.pdevjay.proxect.presentation.navigation.NavSharedViewModel
 import com.pdevjay.proxect.presentation.screen.common.BasicContainer
 import com.pdevjay.proxect.presentation.screen.common.ProjectCard
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
@@ -74,6 +75,7 @@ enum class ProjectFilter(val code: Int, val displayName: String) {
 @Composable
 fun DashboardScreen(
     navController: NavController,
+    navSharedViewModel: NavSharedViewModel,
     projectViewModel: ProjectViewModel,
     onNavigateToProjectDetail: (ProjectForPresentation) -> Unit = {}
 ) {

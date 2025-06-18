@@ -8,10 +8,10 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.screen.calendar.model.CalendarDay
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 
@@ -29,7 +29,8 @@ fun packProjectsIntoLines(
     week: List<CalendarDay>,
     projects: List<ProjectForPresentation>
 ): List<List<ProjectForPresentation>> {
-    val lines = mutableListOf<MutableList<Pair<ProjectForPresentation, IntRange>>>() // 줄별로 프로젝트와 index 범위 보관
+    val lines =
+        mutableListOf<MutableList<Pair<ProjectForPresentation, IntRange>>>() // 줄별로 프로젝트와 index 범위 보관
 
     val sortedProjects = sortProject(projects)
 
@@ -107,3 +108,12 @@ fun Modifier.dashedRectBorder(
         )
     }
 )
+
+fun filterProjectsInDate(
+    projects: List<ProjectForPresentation>,
+    date: LocalDate
+): List<ProjectForPresentation> {
+    return projects.filter {
+        it.startDate.toUTCLocalDate() <= date && it.endDate.toUTCLocalDate() >= date
+    }.sortedBy { it.startDate }
+}

@@ -7,11 +7,11 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.pdevjay.proxect.presentation.data.ProjectAddNav
-import com.pdevjay.proxect.presentation.data.ProjectCalendarNav
-import com.pdevjay.proxect.presentation.data.ProjectDashboardNav
-import com.pdevjay.proxect.presentation.data.ProjectSearchNav
-import com.pdevjay.proxect.presentation.data.ProjectSettingsNav
+import com.pdevjay.proxect.presentation.data.CalendarGraph
+import com.pdevjay.proxect.presentation.data.DashboardGraph
+import com.pdevjay.proxect.presentation.data.ProjectAdd
+import com.pdevjay.proxect.presentation.data.SearchGraph
+import com.pdevjay.proxect.presentation.data.SettingsGraph
 import kotlinx.serialization.Serializable
 
 //sealed class BottomNavItem(
@@ -39,23 +39,32 @@ sealed class BottomNavItem<T : @Serializable Any>(
 ) {
     // 각 아이템 선언 시 제네릭 타입 명시
     object Dashboard :
-        BottomNavItem<ProjectDashboardNav>(ProjectDashboardNav, Icons.Default.Dashboard, "대시보드")
+        BottomNavItem<DashboardGraph>(
+            DashboardGraph,
+            Icons.Default.Dashboard,
+            "대시보드"
+        )
 
     object Calendar :
-        BottomNavItem<ProjectCalendarNav>(ProjectCalendarNav, Icons.Default.CalendarMonth, "달력")
+        BottomNavItem<CalendarGraph>(
+            CalendarGraph,
+            Icons.Default.CalendarMonth,
+            "달력"
+        )
 
-    object Plus : BottomNavItem<ProjectAddNav>(ProjectAddNav, Icons.Default.Add, "추가")
-    object Lists : BottomNavItem<ProjectSearchNav>(
-        ProjectSearchNav,
+    object Plus : BottomNavItem<ProjectAdd>(ProjectAdd, Icons.Default.Add, "추가")
+
+    object Search : BottomNavItem<SearchGraph>(
+        SearchGraph,
         Icons.AutoMirrored.Filled.FormatListBulleted,
         "목록"
     )
 
     object Settings :
-        BottomNavItem<ProjectSettingsNav>(ProjectSettingsNav, Icons.Default.Settings, "설정")
+        BottomNavItem<SettingsGraph>(SettingsGraph, Icons.Default.Settings, "설정")
 
     companion object {
-        val items: List<BottomNavItem<*>> = listOf(Dashboard, Calendar, Plus, Lists, Settings)
+        val items: List<BottomNavItem<*>> = listOf(Dashboard, Calendar, Plus, Search, Settings)
     }
 }
 

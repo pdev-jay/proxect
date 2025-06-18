@@ -54,17 +54,5 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
     fun goToPreviousMonth() {
         generateMonthDays(_state.value.yearMonth.minusMonths(1))
     }
-
-//    fun setSelectedDate(
-//        date: LocalDate?
-//    ) {
-//        _state.update { it.copy(selectedDate = date) }
-//    }
-//
-//    fun setProjectsInDate(projects: List<ProjectForPresentation> = emptyList()) {
-//        val sortedProjects = sortProject(projects)
-//
-//        _state.update { it.copy(projects = sortedProjects) }
-//    }
 }
 

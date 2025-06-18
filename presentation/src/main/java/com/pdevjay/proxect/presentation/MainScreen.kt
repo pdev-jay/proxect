@@ -34,19 +34,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.pdevjay.proxect.presentation.data.ProjectAddNav
-import com.pdevjay.proxect.presentation.data.ProjectDetailNav
-import com.pdevjay.proxect.presentation.data.ProjectEditNav
-import com.pdevjay.proxect.presentation.data.ProjectForPresentation
-import com.pdevjay.proxect.presentation.data.ProjectListNav
+import com.pdevjay.proxect.presentation.data.ProjectAdd
+import com.pdevjay.proxect.presentation.data.ProjectDetail_Calendar
+import com.pdevjay.proxect.presentation.data.ProjectDetail_Dashboard
+import com.pdevjay.proxect.presentation.data.ProjectEdit_Calendar
+import com.pdevjay.proxect.presentation.data.ProjectEdit_Dashboard
 import com.pdevjay.proxect.presentation.navigation.BottomNavItem
 import com.pdevjay.proxect.presentation.navigation.MainNavHost
-import com.pdevjay.proxect.presentation.screen.lists.ProjectListViewModel
-import com.pdevjay.proxect.presentation.screen.project.ProjectAddDialog
-import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 
 
 val LocalTopBarSetter = compositionLocalOf<(TopAppBarData) -> Unit> {
@@ -66,11 +62,8 @@ fun MainScreen() {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-    var showAddDialog by remember { mutableStateOf(false) }
-    val projectViewModel: ProjectViewModel = hiltViewModel()
-    val projectListViewModel: ProjectListViewModel = hiltViewModel()
-    var projectToAdd by remember { mutableStateOf<ProjectForPresentation?>(null) }
-
+    Log.e("currentRoute", "${currentRoute}")
+    Log.e("currentRoute", "${ProjectAdd.serializer().descriptor.serialName}")
     var topBarData by remember {
         mutableStateOf(
             TopAppBarData(
@@ -80,37 +73,23 @@ fun MainScreen() {
         )
     }
 
-    val noBottomBarPrefixes =
-        listOf(
-            ProjectAddNav::class.qualifiedName!!,
-            ProjectEditNav::class.qualifiedName!!,
-            ProjectDetailNav::class.qualifiedName!!,
-            ProjectListNav::class.qualifiedName!!,
-        )
+//    val hideBottomBar = when (currentRoute) {
+//        is DashboardGraph,
+//        is CalendarGraph,
+//        is SearchGraph,
+//        is SettingsGraph -> false
+//
+//        else -> true
+//    }
+    val screenToHideBottomBar = listOf(
+        ProjectEdit_Dashboard.serializer().descriptor.serialName,
+        ProjectDetail_Dashboard.serializer().descriptor.serialName,
+        ProjectEdit_Calendar.serializer().descriptor.serialName,
+        ProjectDetail_Calendar.serializer().descriptor.serialName,
+        ProjectAdd.serializer().descriptor.serialName
+    )
 
-    val hideBottomBar = noBottomBarPrefixes.any { currentRoute?.startsWith(it) == true }
-
-    if (showAddDialog) {
-        ProjectAddDialog(
-            projectToAdd = projectToAdd,
-            onDismiss = {
-                showAddDialog = false
-                projectToAdd = null
-            },
-            onChange = { projectToAdd = it },
-            onConfirm = {
-                if (projectToAdd != null) {
-                    if (projectToAdd!!.name.isNotBlank()) {
-                        projectViewModel.addProject(projectToAdd!!)
-                        showAddDialog = false
-                        projectToAdd = null
-                    }
-                }
-            },
-            viewModel = projectViewModel
-        )
-    }
-
+    val hideBottomBar = screenToHideBottomBar.contains(currentRoute)
     CompositionLocalProvider(
         LocalTopBarSetter provides { topBarData = it }
     ) {
@@ -157,47 +136,94 @@ fun MainScreen() {
                 if (!hideBottomBar) {
                     NavigationBar {
                         BottomNavItem.items.forEach { item ->
-                            if (item == BottomNavItem.Plus) {
-                                NavigationBarItem(
-                                    selected = false,
-                                    onClick = {
-                                        // 화면 전환 없이 액션만
-                                        navController.navigate(ProjectAddNav)
-                                    },
-                                    icon = {
+                            val selected = currentRoute == item.route
+
+                            NavigationBarItem(
+                                selected = selected,
+                                onClick = {
+                                    if (currentRoute != item.route) {
+                                        navController.navigate(item.route) {
+                                            when (item.route) {
+//                                                is MainDestination -> {
+//                                                    popUpTo(item.route) {
+//                                                        inclusive = true
+//                                                        saveState = true
+//                                                    }
+//                                                    restoreState = true
+//                                                    launchSingleTop = true
+//                                                }
+
+                                                is ProjectAdd -> {
+                                                    launchSingleTop = true
+                                                }
+
+                                                else -> {
+                                                    popUpTo(item.route) {
+                                                        inclusive = true
+                                                        saveState = true
+                                                    }
+                                                    restoreState = true
+                                                    launchSingleTop = true
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                icon = {
+                                    if (item == BottomNavItem.Plus) {
                                         Box(
                                             modifier = Modifier
-                                                .size(32.dp) // 원하는 사이즈로 고정
+                                                .size(32.dp)
                                                 .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
-                                                .padding(2.dp), // 아이콘 여백 조절
+                                                .padding(2.dp),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Icon(item.icon, contentDescription = item.label)
                                         }
-                                    },
-                                    alwaysShowLabel = false
-                                )
-                            } else {
-                                NavigationBarItem(
-                                    selected = currentRoute == item.route::class.qualifiedName,
-                                    onClick = {
-                                        navController.navigate(item.route)
-                                    },
-                                    icon = { Icon(item.icon, contentDescription = item.label) },
-                                    alwaysShowLabel = false
-                                )
-                            }
+                                    } else {
+                                        Icon(item.icon, contentDescription = item.label)
+                                    }
+                                },
+                                alwaysShowLabel = false,
+                            )
+//                            if (item == BottomNavItem.Plus) {
+//                                NavigationBarItem(
+//                                    selected = false,
+//                                    onClick = {
+//                                        // 화면 전환 없이 액션만
+//                                        navController.navigate(ProjectAddNav)
+//                                    },
+//                                    icon = {
+//                                        Box(
+//                                            modifier = Modifier
+//                                                .size(32.dp) // 원하는 사이즈로 고정
+//                                                .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
+//                                                .padding(2.dp), // 아이콘 여백 조절
+//                                            contentAlignment = Alignment.Center
+//                                        ) {
+//                                            Icon(item.icon, contentDescription = item.label)
+//                                        }
+//                                    },
+//                                    alwaysShowLabel = false
+//                                )
+//                            } else {
+//                                NavigationBarItem(
+//                                    selected = currentRoute == item.route::class.qualifiedName,
+//                                    onClick = {
+//                                        navController.navigate(item.route)
+//                                    },
+//                                    icon = { Icon(item.icon, contentDescription = item.label) },
+//                                    alwaysShowLabel = false
+//                                )
+//                            }
                         }
                     }
                 }
             },
         ) { innerPadding ->
-            Log.e("nav", "${ProjectDetailNav::class.qualifiedName}")
             MainNavHost(
                 navController = navController,
                 modifier = Modifier.padding(innerPadding),
-                projectViewModel = projectViewModel,
-                projectListViewModel = projectListViewModel
             )
         }
     }

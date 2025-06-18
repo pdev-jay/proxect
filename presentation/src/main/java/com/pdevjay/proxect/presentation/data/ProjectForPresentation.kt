@@ -20,27 +20,27 @@ data class ProjectForPresentation(
 ) : Parcelable
 
 
-fun ProjectForPresentation.toDetailNav() = ProjectDetailNav(
-    id,
-    name,
-    description,
-    startDate,
-    endDate,
-    color = color,
-    status = status,
-    finishedDate = finishedDate
-)
-
-fun ProjectForPresentation.toEditNav() = ProjectEditNav(
-    id,
-    name,
-    description,
-    startDate,
-    endDate,
-    color = color,
-    status = status,
-    finishedDate = finishedDate
-)
+//fun ProjectForPresentation.toDetailNav() = ProjectDetailNav(
+//    id,
+//    name,
+//    description,
+//    startDate,
+//    endDate,
+//    color = color,
+//    status = status,
+//    finishedDate = finishedDate
+//)
+//
+//fun ProjectForPresentation.toEditNav() = ProjectEditNav(
+//    id,
+//    name,
+//    description,
+//    startDate,
+//    endDate,
+//    color = color,
+//    status = status,
+//    finishedDate = finishedDate
+//)
 
 
 fun ProjectForPresentation.toDomain() = Project(

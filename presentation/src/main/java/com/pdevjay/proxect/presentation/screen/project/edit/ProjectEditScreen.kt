@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +30,7 @@ import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.LocalTopBarSetter
 import com.pdevjay.proxect.presentation.TopAppBarData
-import com.pdevjay.proxect.presentation.data.ProjectForPresentation
+import com.pdevjay.proxect.presentation.navigation.NavSharedViewModel
 import com.pdevjay.proxect.presentation.screen.common.colorOptions
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.project.component.ColorPickerGrid
@@ -42,11 +43,13 @@ import java.time.LocalDate
 @Composable
 fun ProjectEditScreen(
     navController: NavController,
-    project: ProjectForPresentation,
+    navSharedViewModel: NavSharedViewModel,
+//    project: ProjectForPresentation,
     projectViewModel: ProjectViewModel
 ) {
-    val originalProject = project.copy()
-    var newProject by remember { mutableStateOf(project.copy()) }
+    val project by navSharedViewModel.selectedProject.collectAsState()
+    val originalProject = project!!.copy()
+    var newProject by remember { mutableStateOf(project!!.copy()) }
 
     var showUpdateConfirmDialog by remember { mutableStateOf(false) }
     var showUpdateCancelDialog by remember { mutableStateOf(false) }
