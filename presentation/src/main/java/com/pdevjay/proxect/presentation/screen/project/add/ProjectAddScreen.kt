@@ -24,7 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
@@ -41,9 +40,8 @@ import java.util.UUID
 
 @Composable
 fun ProjectAddScreen(
-    navController: NavController,
-//    navSharedViewModel: NavSharedViewModel,
-    projectViewModel: ProjectViewModel
+    projectViewModel: ProjectViewModel,
+    onPopBackStack: () -> Unit = {}
 ) {
     var projectToAdd by remember {
         mutableStateOf<ProjectForPresentation>(
@@ -88,7 +86,7 @@ fun ProjectAddScreen(
                         onClick = {
                             if (projectToAdd.name.isNotBlank()) {
                                 projectViewModel.addProject(projectToAdd)
-                                navController.popBackStack()
+                                onPopBackStack()
                             }
                         }
                     ) {

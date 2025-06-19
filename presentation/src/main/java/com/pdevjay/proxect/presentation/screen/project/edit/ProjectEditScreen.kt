@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.utils.formatDate
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.LocalTopBarSetter
@@ -42,10 +41,9 @@ import java.time.LocalDate
 
 @Composable
 fun ProjectEditScreen(
-    navController: NavController,
     navSharedViewModel: NavSharedViewModel,
-//    project: ProjectForPresentation,
-    projectViewModel: ProjectViewModel
+    projectViewModel: ProjectViewModel,
+    onPopBackStack: () -> Unit = {}
 ) {
     val project by navSharedViewModel.selectedProject.collectAsState()
     val originalProject = project!!.copy()
@@ -68,7 +66,7 @@ fun ProjectEditScreen(
                     if (newProject != originalProject) {
                         showUpdateCancelDialog = true
                     } else {
-                        navController.popBackStack()
+                        onPopBackStack()
                     }
                 },
                 actions = {
@@ -92,7 +90,7 @@ fun ProjectEditScreen(
             projectName = originalProject.name,
             onConfirm = {
                 showUpdateCancelDialog = false
-                navController.popBackStack()
+                onPopBackStack()
             },
             onDismiss = {
                 showUpdateCancelDialog = false
@@ -108,11 +106,7 @@ fun ProjectEditScreen(
                 projectViewModel.updateProject(
                     newProject
                 )
-                navController.previousBackStackEntry
-                    ?.savedStateHandle
-                    ?.set("edit_result", newProject)
-
-                navController.popBackStack()
+                onPopBackStack()
             },
             onDismiss = {
                 showUpdateConfirmDialog = false

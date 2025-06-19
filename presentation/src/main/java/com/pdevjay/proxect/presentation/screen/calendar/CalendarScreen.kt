@@ -1,7 +1,6 @@
 package com.pdevjay.proxect.presentation.screen.calendar
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -12,10 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.pdevjay.proxect.presentation.data.ProjectForPresentation
+import com.pdevjay.proxect.presentation.LocalTopBarSetter
+import com.pdevjay.proxect.presentation.TopAppBarData
 import com.pdevjay.proxect.presentation.navigation.NavSharedViewModel
 import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarTopBar
 import com.pdevjay.proxect.presentation.screen.calendar.component.CalendarWeekGrid
@@ -27,18 +25,28 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarScreen(
-    navController: NavController,
     navSharedViewModel: NavSharedViewModel,
     calendarViewModel: CalendarViewModel = hiltViewModel(),
     projectViewModel: ProjectViewModel = hiltViewModel(),
-    onNavigateToList: (List<ProjectForPresentation>) -> Unit = {},
+    onNavigateToList: () -> Unit = {},
 ) {
     val calendarState by calendarViewModel.state.collectAsState()
     val projects by projectViewModel.projects.collectAsState()
 
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
-    val padding = PaddingValues(4.dp)
+    val setTopBar = LocalTopBarSetter.current
+
+    LaunchedEffect(Unit) {
+        setTopBar(
+            TopAppBarData(
+                title = "Proxect",
+                showBack = false,
+                actions = {
+                }
+            )
+        )
+    }
 
     LaunchedEffect(calendarState.days) {
         projectViewModel.loadProjects(
@@ -50,7 +58,7 @@ fun CalendarScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        CalendarTopBar(padding, calendarViewModel, calendarState)
+        CalendarTopBar(calendarViewModel, calendarState)
 
         CalendarWeekGrid(calendarState, projects, onDayClick = { day ->
             selectedDate = day.date
@@ -60,13 +68,7 @@ fun CalendarScreen(
 
             navSharedViewModel.setProjects(sortedProjects)
 
-//            navController.currentBackStackEntry?.savedStateHandle?.set(
-//                "project_list",
-//                sortedProjects
-//            )
-
-            onNavigateToList(sortedProjects)
-
+            onNavigateToList()
         })
     }
 }

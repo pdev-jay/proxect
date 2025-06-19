@@ -7,11 +7,6 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.pdevjay.proxect.presentation.data.CalendarGraph
-import com.pdevjay.proxect.presentation.data.DashboardGraph
-import com.pdevjay.proxect.presentation.data.ProjectAdd
-import com.pdevjay.proxect.presentation.data.SearchGraph
-import com.pdevjay.proxect.presentation.data.SettingsGraph
 import kotlinx.serialization.Serializable
 
 //sealed class BottomNavItem(
@@ -52,7 +47,7 @@ sealed class BottomNavItem<T : @Serializable Any>(
             "달력"
         )
 
-    object Plus : BottomNavItem<ProjectAdd>(ProjectAdd, Icons.Default.Add, "추가")
+    object Add : BottomNavItem<ProjectAdd>(ProjectAdd, Icons.Default.Add, "추가")
 
     object Search : BottomNavItem<SearchGraph>(
         SearchGraph,
@@ -64,7 +59,7 @@ sealed class BottomNavItem<T : @Serializable Any>(
         BottomNavItem<SettingsGraph>(SettingsGraph, Icons.Default.Settings, "설정")
 
     companion object {
-        val items: List<BottomNavItem<*>> = listOf(Dashboard, Calendar, Plus, Search, Settings)
+        val items: List<BottomNavItem<*>> = listOf(Dashboard, Calendar, Add, Search, Settings)
     }
 }
 

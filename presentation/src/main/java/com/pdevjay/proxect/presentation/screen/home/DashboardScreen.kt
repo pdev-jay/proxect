@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import com.pdevjay.proxect.presentation.LocalTopBarSetter
@@ -74,10 +73,9 @@ enum class ProjectFilter(val code: Int, val displayName: String) {
 
 @Composable
 fun DashboardScreen(
-    navController: NavController,
     navSharedViewModel: NavSharedViewModel,
     projectViewModel: ProjectViewModel,
-    onNavigateToProjectDetail: (ProjectForPresentation) -> Unit = {}
+    onNavigateToProjectDetail: () -> Unit = {}
 ) {
     val projects by projectViewModel.projects.collectAsState()
     var selectedFilter by remember { mutableStateOf(ProjectFilter.IN_PROGRESS) }
@@ -266,7 +264,8 @@ fun DashboardScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 ProjectCard(project) {
-                                    onNavigateToProjectDetail(project)
+                                    navSharedViewModel.setProject(project)
+                                    onNavigateToProjectDetail()
                                 }
                             }
                         }

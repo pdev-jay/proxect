@@ -20,11 +20,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.pdevjay.proxect.domain.utils.toUTCLocalDate
 import com.pdevjay.proxect.presentation.LocalTopBarSetter
 import com.pdevjay.proxect.presentation.TopAppBarData
-import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.navigation.NavSharedViewModel
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.project.component.ConfirmDeleteDialog
@@ -32,17 +30,16 @@ import com.pdevjay.proxect.presentation.screen.project.component.ConfirmDeleteDi
 
 @Composable
 fun ProjectDetailScreen(
-    navController: NavController,
     navSharedViewModel: NavSharedViewModel,
-//    project: ProjectForPresentation,
     projectViewModel: ProjectViewModel,
-    onNavigateToEdit: () -> Unit = {}
+    onNavigateToEdit: () -> Unit = {},
+    onPopBackStack: () -> Unit = {}
 ) {
 //    var newProject by remember { mutableStateOf(project.copy()) }
     val project by navSharedViewModel.selectedProject.collectAsState()
 
-    val currentBackStackEntry = navController.currentBackStackEntry
-    val result = currentBackStackEntry?.savedStateHandle?.get<ProjectForPresentation>("edit_result")
+//    val currentBackStackEntry = navController.currentBackStackEntry
+//    val result = currentBackStackEntry?.savedStateHandle?.get<ProjectForPresentation>("edit_result")
 
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
@@ -119,7 +116,7 @@ fun ProjectDetailScreen(
                 onConfirm = {
                     showDeleteConfirmDialog = false
                     projectViewModel.deleteProject(project!!)
-                    navController.popBackStack()
+                    onPopBackStack()
                 },
                 onDismiss = {
                     showDeleteConfirmDialog = false

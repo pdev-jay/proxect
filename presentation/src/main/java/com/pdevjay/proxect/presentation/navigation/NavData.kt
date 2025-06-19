@@ -1,4 +1,4 @@
-package com.pdevjay.proxect.presentation.data
+package com.pdevjay.proxect.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
@@ -91,7 +91,7 @@ data object CalendarGraph
 data object Calendar
 
 @Serializable
-data object ProjectList
+data object ProjectList_Calendar
 
 @Serializable
 data object ProjectDetail_Calendar
@@ -117,6 +117,9 @@ data object SettingsGraph
 @Serializable
 data object Settings
 //}
+
+@Serializable
+data object ProjectAddGraph
 
 @Serializable
 data object ProjectAdd
