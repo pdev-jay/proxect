@@ -85,8 +85,15 @@ fun ProjectAddScreen(
                     TextButton(
                         onClick = {
                             if (projectToAdd.name.isNotBlank()) {
-                                projectViewModel.addProject(projectToAdd)
-                                onPopBackStack()
+                                projectViewModel.addProject(projectToAdd,
+                                    onSuccess = {
+                                    },
+                                    onFailure = { message, throwable ->
+                                    },
+                                    onComplete = {
+                                        onPopBackStack()
+                                    }
+                                )
                             }
                         }
                     ) {

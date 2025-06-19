@@ -19,30 +19,6 @@ data class ProjectForPresentation(
     val finishedDate: Long? = null
 ) : Parcelable
 
-
-//fun ProjectForPresentation.toDetailNav() = ProjectDetailNav(
-//    id,
-//    name,
-//    description,
-//    startDate,
-//    endDate,
-//    color = color,
-//    status = status,
-//    finishedDate = finishedDate
-//)
-//
-//fun ProjectForPresentation.toEditNav() = ProjectEditNav(
-//    id,
-//    name,
-//    description,
-//    startDate,
-//    endDate,
-//    color = color,
-//    status = status,
-//    finishedDate = finishedDate
-//)
-
-
 fun ProjectForPresentation.toDomain() = Project(
     id,
     name,

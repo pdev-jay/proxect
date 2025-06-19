@@ -53,17 +53,17 @@ fun MainNavHost(
                     navSharedViewModel = navSharedViewModel,
                     projectViewModel,
                     onNavigateToProjectDetail = {
-                        navController.navigate(ProjectDetail_Dashboard)
+                        navController.navigate(ProjectDetailDashboard)
                     }
                 )
             }
 
-            composable<ProjectDetail_Dashboard>(
+            composable<ProjectDetailDashboard>(
                 enterTransition = {
                     val from = initialState.destination.route.orEmpty()
                     val to = targetState.destination.route.orEmpty()
                     if (from.startsWith(Dashboard.serializer().descriptor.serialName) && to.startsWith(
-                            ProjectDetail_Dashboard.serializer().descriptor.serialName
+                            ProjectDetailDashboard.serializer().descriptor.serialName
                         )
                     ) {
                         slideInFromRight()
@@ -74,7 +74,7 @@ fun MainNavHost(
                 exitTransition = {
                     val from = initialState.destination.route.orEmpty()
                     val to = targetState.destination.route.orEmpty()
-                    if (from.startsWith(ProjectDetail_Dashboard.serializer().descriptor.serialName) && to.startsWith(
+                    if (from.startsWith(ProjectDetailDashboard.serializer().descriptor.serialName) && to.startsWith(
                             Dashboard.serializer().descriptor.serialName
                         )
                     ) {
@@ -91,7 +91,7 @@ fun MainNavHost(
                     navSharedViewModel = navSharedViewModel,
                     projectViewModel = projectViewModel,
                     onNavigateToEdit = {
-                        navController.navigate(ProjectEdit_Dashboard)
+                        navController.navigate(ProjectEditDashboard)
                     },
                     onPopBackStack = {
                         navController.popBackStack()
@@ -99,7 +99,7 @@ fun MainNavHost(
                 )
             }
 
-            composable<ProjectEdit_Dashboard>(
+            composable<ProjectEditDashboard>(
                 enterTransition = { slideInFromRight() },
                 exitTransition = { slideOutToRight() }
 
@@ -152,17 +152,17 @@ fun MainNavHost(
                     navSharedViewModel = navSharedViewModel,
                     projectViewModel = projectViewModel,
                     onNavigateToList = {
-                        navController.navigate(ProjectList_Calendar)
+                        navController.navigate(ProjectListCalendar)
                     },
                 )
             }
 
-            composable<ProjectList_Calendar>(
+            composable<ProjectListCalendar>(
                 enterTransition = {
                     val from = initialState.destination.route.orEmpty()
                     val to = targetState.destination.route.orEmpty()
                     if (from.startsWith(Calendar.serializer().descriptor.serialName) && to.startsWith(
-                            ProjectList_Calendar.serializer().descriptor.serialName
+                            ProjectListCalendar.serializer().descriptor.serialName
                         )
                     ) {
                         slideInFromRight()
@@ -174,7 +174,7 @@ fun MainNavHost(
                 exitTransition = {
                     val from = initialState.destination.route.orEmpty()
                     val to = targetState.destination.route.orEmpty()
-                    if (from.startsWith(ProjectList_Calendar.serializer().descriptor.serialName) && to.startsWith(
+                    if (from.startsWith(ProjectListCalendar.serializer().descriptor.serialName) && to.startsWith(
                             Calendar.serializer().descriptor.serialName
                         )
                     ) {
@@ -192,18 +192,18 @@ fun MainNavHost(
                 ProjectListScreen(
                     navSharedViewModel = navSharedViewModel,
                     onNavigateToDetail = {
-                        navController.navigate(ProjectDetail_Calendar)
+                        navController.navigate(ProjectDetailCalendar)
                     }
                 )
             }
 
-            composable<ProjectDetail_Calendar>(
+            composable<ProjectDetailCalendar>(
                 enterTransition = {
                     val from = initialState.destination.route.orEmpty()
                     val to = targetState.destination.route.orEmpty()
 
-                    if (from.startsWith(ProjectEdit_Calendar.serializer().descriptor.serialName) && to.startsWith(
-                            ProjectDetail_Calendar.serializer().descriptor.serialName
+                    if (from.startsWith(ProjectEditCalendar.serializer().descriptor.serialName) && to.startsWith(
+                            ProjectDetailCalendar.serializer().descriptor.serialName
                         )
                     ) {
                         slideInFromLeft()
@@ -216,8 +216,8 @@ fun MainNavHost(
                     val from = initialState.destination.route.orEmpty()
                     val to = targetState.destination.route.orEmpty()
 
-                    if (from.startsWith(ProjectDetail_Calendar.serializer().descriptor.serialName) && to.startsWith(
-                            ProjectEdit_Calendar.serializer().descriptor.serialName
+                    if (from.startsWith(ProjectDetailCalendar.serializer().descriptor.serialName) && to.startsWith(
+                            ProjectEditCalendar.serializer().descriptor.serialName
                         )
                     ) {
                         slideOutToLeft()
@@ -234,7 +234,7 @@ fun MainNavHost(
                     navSharedViewModel = navSharedViewModel,
                     projectViewModel = projectViewModel,
                     onNavigateToEdit = {
-                        navController.navigate(ProjectEdit_Calendar)
+                        navController.navigate(ProjectEditCalendar)
                     },
                     onPopBackStack = {
                         navController.popBackStack()
@@ -242,7 +242,7 @@ fun MainNavHost(
                 )
             }
 
-            composable<ProjectEdit_Calendar>(
+            composable<ProjectEditCalendar>(
                 enterTransition = { slideInFromRight() },
                 exitTransition = { slideOutToRight() }
 

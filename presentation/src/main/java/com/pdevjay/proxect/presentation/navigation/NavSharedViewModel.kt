@@ -22,4 +22,19 @@ class NavSharedViewModel @Inject constructor() : ViewModel() {
     fun setProjects(projects: List<ProjectForPresentation>) {
         _selectedProjects.value = projects
     }
+
+    fun updateProject(project: ProjectForPresentation) {
+        _selectedProject.value = project
+        _selectedProjects.value = _selectedProjects.value.map {
+            if (it.id == project.id) {
+                project
+            } else {
+                it
+            }
+        }
+    }
+
+    fun deleteProject(project: ProjectForPresentation) {
+        _selectedProjects.value = _selectedProjects.value.filter { it.id != project.id }
+    }
 }

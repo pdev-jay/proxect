@@ -9,26 +9,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
-//sealed class BottomNavItem(
-//    val route: String,
-//    val icon: ImageVector,
-//    val label: String
-//) {
-//    object Dashboard : BottomNavItem("dashboard", Icons.Default.Dashboard, "대시보드")
-//
-//    object Calendar : BottomNavItem("calendar", Icons.Default.CalendarMonth, "달력")
-//    object Plus : BottomNavItem("plus", Icons.Default.Add, "추가")
-//    object Lists : BottomNavItem("lists", Icons.AutoMirrored.Filled.FormatListBulleted, "목록")
-//    object Settings : BottomNavItem("settings", Icons.Default.Settings, "설정")
-//
-//    companion object {
-//        val items = listOf(Dashboard, Calendar, Plus, Lists, Settings)
-//    }
-//}
-
-// BottomNavItem을 제네릭으로 선언하고 T는 @Serializable Any로 제한
 sealed class BottomNavItem<T : @Serializable Any>(
-    val route: T, // T 타입의 @Serializable 객체 인스턴스
+    val route: T,
     val icon: ImageVector,
     val label: String
 ) {

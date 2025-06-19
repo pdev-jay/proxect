@@ -35,24 +35,11 @@ fun ProjectDetailScreen(
     onNavigateToEdit: () -> Unit = {},
     onPopBackStack: () -> Unit = {}
 ) {
-//    var newProject by remember { mutableStateOf(project.copy()) }
     val project by navSharedViewModel.selectedProject.collectAsState()
-
-//    val currentBackStackEntry = navController.currentBackStackEntry
-//    val result = currentBackStackEntry?.savedStateHandle?.get<ProjectForPresentation>("edit_result")
 
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     val setTopBar = LocalTopBarSetter.current
-
-//    LaunchedEffect(result) {
-//        result?.let {
-//            newProject = it
-//            // 결과 처리 후, 재사용 방지를 위해 삭제
-//            currentBackStackEntry.savedStateHandle.remove<ProjectForPresentation>("edit_result")
-//            println("수정 결과 수신: $it")
-//        }
-//    }
 
     LaunchedEffect(Unit) {
         setTopBar(
@@ -114,9 +101,18 @@ fun ProjectDetailScreen(
             ConfirmDeleteDialog(
                 projectName = project!!.name,
                 onConfirm = {
-                    showDeleteConfirmDialog = false
-                    projectViewModel.deleteProject(project!!)
-                    onPopBackStack()
+                    projectViewModel.deleteProject(project!!,
+                        onSuccess = {
+                            navSharedViewModel.deleteProject(project!!)
+                        },
+                        onFailure = { message, throwable ->
+
+                        },
+                        onComplete = {
+                            showDeleteConfirmDialog = false
+                            onPopBackStack()
+                        }
+                    )
                 },
                 onDismiss = {
                     showDeleteConfirmDialog = false

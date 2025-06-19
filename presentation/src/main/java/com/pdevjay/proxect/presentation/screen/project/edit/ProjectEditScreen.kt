@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +38,7 @@ import com.pdevjay.proxect.presentation.screen.project.component.ConfirmEditCanc
 import com.pdevjay.proxect.presentation.screen.project.component.ConfirmEditDialog
 import com.pdevjay.proxect.presentation.screen.project.component.DatePickerDialogWrapper
 import com.pdevjay.proxect.presentation.screen.project.component.ProjectStatusSelector
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -51,6 +53,8 @@ fun ProjectEditScreen(
 
     var showUpdateConfirmDialog by remember { mutableStateOf(false) }
     var showUpdateCancelDialog by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
 
 
     var showDatePicker by remember { mutableStateOf(false) }
@@ -102,11 +106,22 @@ fun ProjectEditScreen(
         ConfirmEditDialog(
             projectName = originalProject.name,
             onConfirm = {
-                showUpdateConfirmDialog = false
-                projectViewModel.updateProject(
-                    newProject
-                )
-                onPopBackStack()
+
+                coroutineScope.launch {
+                    projectViewModel.updateProject(
+                        newProject,
+                        onSuccess = {
+                            navSharedViewModel.updateProject(newProject)
+                        },
+                        onFailure = { message, throwable ->
+
+                        },
+                        onComplete = {
+                            showUpdateConfirmDialog = false
+                            onPopBackStack()
+                        }
+                    )
+                }
             },
             onDismiss = {
                 showUpdateConfirmDialog = false
