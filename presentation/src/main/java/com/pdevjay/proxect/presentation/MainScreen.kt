@@ -51,7 +51,7 @@ fun MainScreen() {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-    val currentRouteRoot = currentBackStackEntry?.destination?.parent?.route
+    val currentParentRoute = currentBackStackEntry?.destination?.parent?.route
 
     var topBarData by remember {
         mutableStateOf(
@@ -107,12 +107,12 @@ fun MainScreen() {
                     NavigationBar {
                         BottomNavItem.items.forEach { item ->
                             val route = item.route::class.qualifiedName
-                            val selected = currentRouteRoot == route
+                            val selected = currentParentRoute == route
 
                             NavigationBarItem(
                                 selected = selected,
                                 onClick = {
-                                    if (currentRouteRoot != item.route) {
+                                    if (currentParentRoute != item.route) {
                                         navController.navigate(item.route) {
                                             when (item.route) {
                                                 is ProjectAdd -> {

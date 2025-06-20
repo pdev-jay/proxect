@@ -1,22 +1,30 @@
 package com.pdevjay.proxect.di
 
+import com.pdevjay.proxect.data.usecase.AddCommentUseCaseImpl
+import com.pdevjay.proxect.data.usecase.DeleteCommentUseCaseImpl
 import com.pdevjay.proxect.data.usecase.DeleteProjectUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetAllProjectsUseCaseImpl
+import com.pdevjay.proxect.data.usecase.GetCommentsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetFutureProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetPastProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetProjectsForHomeUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.InsertProjectUseCaseImpl
+import com.pdevjay.proxect.data.usecase.UpdateCommentUseCaseImpl
 import com.pdevjay.proxect.data.usecase.UpdateProjectUseCaseImpl
 import com.pdevjay.proxect.domain.repository.ProjectRepository
+import com.pdevjay.proxect.domain.usecase.AddCommentUseCase
+import com.pdevjay.proxect.domain.usecase.DeleteCommentUseCase
 import com.pdevjay.proxect.domain.usecase.DeleteProjectUseCase
 import com.pdevjay.proxect.domain.usecase.GetAllProjectsUseCase
+import com.pdevjay.proxect.domain.usecase.GetCommentsUseCase
 import com.pdevjay.proxect.domain.usecase.GetFutureProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetPastProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetProjectsForHomeUseCase
 import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.InsertProjectUseCase
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
+import com.pdevjay.proxect.domain.usecase.UpdateCommentUseCase
 import com.pdevjay.proxect.domain.usecase.UpdateProjectUseCase
 import dagger.Module
 import dagger.Provides
@@ -68,6 +76,26 @@ object UseCaseModule {
     ): GetAllProjectsUseCase = GetAllProjectsUseCaseImpl(repo)
 
     @Provides
+    fun provideAddCommentUseCase(
+        repo: ProjectRepository
+    ): AddCommentUseCase = AddCommentUseCaseImpl(repo)
+
+    @Provides
+    fun provideGetCommentsUseCase(
+        repo: ProjectRepository
+    ): GetCommentsUseCase = GetCommentsUseCaseImpl(repo)
+
+    @Provides
+    fun provideDeleteCommentUseCase(
+        repo: ProjectRepository
+    ): DeleteCommentUseCase = DeleteCommentUseCaseImpl(repo)
+
+    @Provides
+    fun provideUpdateCommentUseCase(
+        repo: ProjectRepository
+    ): UpdateCommentUseCase = UpdateCommentUseCaseImpl(repo)
+
+    @Provides
     fun provideProjectUseCases(
         getProjectsForHome: GetProjectsForHomeUseCase,
         getProjects: GetProjectsUseCase,
@@ -76,7 +104,11 @@ object UseCaseModule {
         updateProject: UpdateProjectUseCase,
         getPastProjects: GetPastProjectsUseCase,
         getFutureProjects: GetFutureProjectsUseCase,
-        getAllProjects: GetAllProjectsUseCase
+        getAllProjects: GetAllProjectsUseCase,
+        addComment: AddCommentUseCase,
+        getComments: GetCommentsUseCase,
+        deleteComment: DeleteCommentUseCase,
+        updateComment: UpdateCommentUseCase
     ): ProjectUseCases {
         return ProjectUseCases(
             getProjectsForHome = getProjectsForHome,
@@ -86,7 +118,11 @@ object UseCaseModule {
             updateProject = updateProject,
             getPastProjects = getPastProjects,
             getFutureProjects = getFutureProjects,
-            getAllProjects = getAllProjects
+            getAllProjects = getAllProjects,
+            addComment = addComment,
+            getComments = getComments,
+            deleteComment = deleteComment,
+            updateComment = updateComment
         )
     }
 

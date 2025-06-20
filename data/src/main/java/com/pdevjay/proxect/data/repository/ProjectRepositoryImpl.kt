@@ -1,8 +1,10 @@
 package com.pdevjay.proxect.data.repository
 
+import com.pdevjay.proxect.data.remote.CommentDto
 import com.pdevjay.proxect.data.remote.ProjectDto
 import com.pdevjay.proxect.data.remote.toDomain
 import com.pdevjay.proxect.data.remote.toDto
+import com.pdevjay.proxect.domain.model.Comment
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.repository.ProjectRepository
 import com.pdevjay.proxect.domain.utils.toEpochMillis
@@ -171,6 +173,52 @@ class ProjectRepositoryImpl @Inject constructor(
             }
             .decodeList<ProjectDto>()
             .map { it.toDomain() }
+    }
+
+    override suspend fun getComments(projectId: String): List<Comment> {
+        return supabase
+            .from("comments")
+            .select {
+                filter {
+                    eq("project_id", projectId)
+                }
+            }
+            .decodeList<CommentDto>()
+            .map { it.toDomain() }
+    }
+
+    override suspend fun addComment(projectId: String, content: String) {
+        supabase
+            .from("comments")
+            .insert(
+                CommentDto(
+                    projectId = projectId,
+                    content = content
+                )
+            )
+    }
+
+    override suspend fun deleteComment(projectId: String, commentId: String) {
+        supabase.from("comments").delete {
+            filter {
+                eq("id", commentId)
+                eq("project_id", projectId)
+            }
+        }
+    }
+
+    override suspend fun updateComment(projectId: String, commentId: String, content: String) {
+        supabase.from("comments").update(
+            {
+                set("content", content)
+            }
+        ) {
+            filter {
+                eq("id", commentId)
+                eq("project_id", projectId)
+            }
+        }
+
     }
 
 

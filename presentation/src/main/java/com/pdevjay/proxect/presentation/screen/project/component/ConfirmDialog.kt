@@ -6,6 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
+enum class TargetType(val label: String) {
+    PROJECT("프로젝트"),
+    COMMENT("댓글")
+}
+
+
 @Composable
 fun ConfirmEditDialog(
     projectName: String,
@@ -33,16 +39,15 @@ fun ConfirmEditDialog(
 
 @Composable
 fun ConfirmEditCancelDialog(
-    projectName: String,
+    targetName: String,
+    targetType: TargetType = TargetType.PROJECT,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("프로젝트 수정 취소") },
-        text = {
-            Text("\"$projectName\" 프로젝트의 변경 사항을 취소하시겠습니까?")
-        },
+        title = { Text("${targetType.label} 수정 취소") },
+        text = { Text("\"$targetName\" ${targetType.label}의 변경 사항을 취소하시겠습니까?") },
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text("확인", color = MaterialTheme.colorScheme.primary)
@@ -56,16 +61,20 @@ fun ConfirmEditCancelDialog(
     )
 }
 
+
 @Composable
 fun ConfirmDeleteDialog(
-    projectName: String,
+    targetName: String,
+    targetType: TargetType = TargetType.PROJECT,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("프로젝트 삭제") },
-        text = { Text("\"$projectName\" 프로젝트를 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.") },
+        title = { Text("${targetType.label} 삭제") },
+        text = {
+            Text("\"$targetName\" ${targetType.label}을(를) 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")
+        },
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text("삭제", color = MaterialTheme.colorScheme.error)
@@ -78,4 +87,3 @@ fun ConfirmDeleteDialog(
         }
     )
 }
-

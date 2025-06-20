@@ -38,6 +38,7 @@ import com.pdevjay.proxect.presentation.screen.project.component.ConfirmEditCanc
 import com.pdevjay.proxect.presentation.screen.project.component.ConfirmEditDialog
 import com.pdevjay.proxect.presentation.screen.project.component.DatePickerDialogWrapper
 import com.pdevjay.proxect.presentation.screen.project.component.ProjectStatusSelector
+import com.pdevjay.proxect.presentation.screen.project.component.TargetType
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -91,7 +92,8 @@ fun ProjectEditScreen(
 
     if (showUpdateCancelDialog) {
         ConfirmEditCancelDialog(
-            projectName = originalProject.name,
+            targetName = originalProject.name,
+            targetType = TargetType.PROJECT,
             onConfirm = {
                 showUpdateCancelDialog = false
                 onPopBackStack()

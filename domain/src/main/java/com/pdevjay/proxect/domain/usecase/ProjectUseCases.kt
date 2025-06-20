@@ -8,5 +8,10 @@ data class ProjectUseCases(
     val deleteProject: DeleteProjectUseCase,
     val updateProject: UpdateProjectUseCase,
     val getPastProjects: GetPastProjectsUseCase,
-    val getFutureProjects: GetFutureProjectsUseCase
+    val getFutureProjects: GetFutureProjectsUseCase,
+
+    val getComments: GetCommentsUseCase,
+    val addComment: AddCommentUseCase,
+    val deleteComment: DeleteCommentUseCase,
+    val updateComment: UpdateCommentUseCase,
 )

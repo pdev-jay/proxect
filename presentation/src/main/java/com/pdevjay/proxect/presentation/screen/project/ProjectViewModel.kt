@@ -6,6 +6,7 @@ import com.pdevjay.proxect.domain.common.UseCaseResult
 import com.pdevjay.proxect.domain.common.handleUseCaseResult
 import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
+import com.pdevjay.proxect.presentation.data.CommentForPresentation
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
 import com.pdevjay.proxect.presentation.data.toDomain
 import com.pdevjay.proxect.presentation.data.toPresentation
@@ -26,8 +27,8 @@ class ProjectViewModel @Inject constructor(
     private val _projects = MutableStateFlow<List<ProjectForPresentation>>(emptyList())
     val projects: StateFlow<List<ProjectForPresentation>> = _projects.asStateFlow()
 
-    private val _projectsForHome = MutableStateFlow<List<ProjectForPresentation>>(emptyList())
-    val projectsForHome: StateFlow<List<ProjectForPresentation>> = _projectsForHome.asStateFlow()
+    private val _comments = MutableStateFlow<List<CommentForPresentation>>(emptyList())
+    val comments: StateFlow<List<CommentForPresentation>> = _comments.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -123,6 +124,106 @@ class ProjectViewModel @Inject constructor(
                 onComplete = onComplete
             )
         }
+
     }
+
+    fun addComment(
+        projectId: String,
+        content: String,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    useCases.addComment(projectId, content)
+                    emit(UseCaseResult.Success(Unit))
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("댓글 추가 실패", e))
+                }
+            }.handleUseCaseResult(
+                onSuccess = { onSuccess() },
+                onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                onComplete = onComplete
+            )
+        }
+    }
+
+    fun getComments(
+        projectId: String,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+
+            flow {
+                try {
+                    val comments = useCases.getComments(projectId).map { it.toPresentation() }
+                    _comments.value = comments
+                    emit(UseCaseResult.Success(Unit))
+
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("댓글 불러오기 실패", e))
+                }
+
+            }.handleUseCaseResult(
+                onSuccess = { onSuccess() },
+                onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                onComplete = onComplete
+            )
+        }
+
+    }
+
+    fun deleteComment(
+        projectId: String,
+        commentId: String,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    useCases.deleteComment(projectId, commentId)
+                    emit(UseCaseResult.Success(Unit))
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("댓글 삭제 실패", e))
+                }
+            }.handleUseCaseResult(
+                onSuccess = { onSuccess() },
+                onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                onComplete = onComplete
+            )
+        }
+    }
+
+    fun updateComment(
+        projectId: String,
+        commentId: String,
+        content: String,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    useCases.updateComment(projectId, commentId, content)
+                    emit(UseCaseResult.Success(Unit))
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("댓글 수정 실패", e))
+                }
+            }.handleUseCaseResult(
+                onSuccess = { onSuccess() },
+                onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                onComplete = onComplete
+            )
+
+        }
+    }
+
 
 }

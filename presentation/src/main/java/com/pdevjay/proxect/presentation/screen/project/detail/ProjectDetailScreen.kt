@@ -26,6 +26,7 @@ import com.pdevjay.proxect.presentation.TopAppBarData
 import com.pdevjay.proxect.presentation.navigation.NavSharedViewModel
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.project.component.ConfirmDeleteDialog
+import com.pdevjay.proxect.presentation.screen.project.component.TargetType
 
 
 @Composable
@@ -36,9 +37,9 @@ fun ProjectDetailScreen(
     onPopBackStack: () -> Unit = {}
 ) {
     val project by navSharedViewModel.selectedProject.collectAsState()
-
+    val comments by projectViewModel.comments.collectAsState()
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
-
+    var commentContent by remember { mutableStateOf("") }
     val setTopBar = LocalTopBarSetter.current
 
     LaunchedEffect(Unit) {
@@ -71,6 +72,16 @@ fun ProjectDetailScreen(
         )
     }
 
+    LaunchedEffect(Unit) {
+        projectViewModel.getComments(
+            project!!.id,
+            onSuccess = {},
+            onFailure = { _, _ -> },
+            onComplete = {}
+        )
+
+
+    }
     if (project != null) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -95,11 +106,124 @@ fun ProjectDetailScreen(
             Spacer(modifier = Modifier)
             Text(project!!.description)
             Spacer(modifier = Modifier)
+
+            // Comments
+            HorizontalDivider(color = Color.LightGray)
+            Text("Comments", style = MaterialTheme.typography.titleMedium)
+            CommentSection(
+                comments,
+                onAddComment = { newComment ->
+                    commentContent = newComment
+                    if (commentContent != "") {
+                        projectViewModel.addComment(project!!.id, commentContent,
+                            onSuccess = {
+                                commentContent = ""
+                            },
+                            onFailure = { message, throwable ->
+                            },
+                            onComplete = {
+                                projectViewModel.getComments(
+                                    project!!.id,
+                                    onSuccess = {},
+                                    onFailure = { _, _ -> },
+                                    onComplete = {}
+                                )
+                            }
+                        )
+                    }
+                },
+                onDeleteComment = { commentId, projectId ->
+                    projectViewModel.deleteComment(projectId, commentId,
+                        onSuccess = {},
+                        onFailure = { message, throwable ->
+                        },
+                        onComplete = {
+                            projectViewModel.getComments(
+                                project!!.id,
+                                onSuccess = {},
+                                onFailure = { _, _ -> },
+                                onComplete = {}
+                            )
+                        }
+                    )
+                },
+                onUpdateComment = { commentId, projectId, newContent ->
+                    projectViewModel.updateComment(projectId, commentId, newContent,
+                        onSuccess = {},
+                        onFailure = { message, throwable ->
+                        },
+                        onComplete = {
+                            projectViewModel.getComments(
+                                project!!.id,
+                                onSuccess = {},
+                                onFailure = { _, _ -> },
+                                onComplete = {}
+                            )
+                        }
+                    )
+                })
+//            TextField(
+//                value = commentContent,
+//                onValueChange = {
+//                    commentContent = it
+//                },
+//                label = { Text("댓글 추가") },
+//                modifier = Modifier.fillMaxWidth(),
+//                minLines = 1,
+//                trailingIcon = {
+//                    Icon(
+//                        Icons.Default.Add, "Add Comment",
+//                        modifier = Modifier.clickable {
+//                            projectViewModel.addComment(project!!.id, commentContent,
+//                                onSuccess = {
+//                                    commentContent = ""
+//                                },
+//                                onFailure = { message, throwable ->
+//                                },
+//                                onComplete = {
+//                                    projectViewModel.getComments(
+//                                        project!!.id,
+//                                        onSuccess = {},
+//                                        onFailure = { _, _ -> },
+//                                        onComplete = {}
+//                                    )
+//                                }
+//                            )
+//                        },
+//                    )
+//                }
+//            )
+//            Column(
+//                modifier = Modifier.fillMaxWidth(),
+//                verticalArrangement = Arrangement.spacedBy(4.dp)
+//            ) {
+//                comments.forEach { comment ->
+//                    Card(
+//                        modifier = Modifier.background(Color.White),
+//                        shape = RoundedCornerShape(12.dp),
+//                        elevation = CardDefaults.cardElevation(1.dp),
+//
+//                        ) {
+//                        Column(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(4.dp),
+//                        ) {
+//                            Text("${comment.author}")
+//                            Text("${comment.content}")
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+//
         }
 
         if (showDeleteConfirmDialog) {
             ConfirmDeleteDialog(
-                projectName = project!!.name,
+                targetName = project!!.name,
+                targetType = TargetType.PROJECT,
                 onConfirm = {
                     projectViewModel.deleteProject(project!!,
                         onSuccess = {
