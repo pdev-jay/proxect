@@ -14,4 +14,9 @@ data class ProjectUseCases(
     val addComment: AddCommentUseCase,
     val deleteComment: DeleteCommentUseCase,
     val updateComment: UpdateCommentUseCase,
+
+    val getTodos: GetTodosUseCase,
+    val addTodo: AddTodoUseCase,
+    val deleteTodo: DeleteTodoUseCase,
+    val updateTodo: UpdateTodoUseCase,
 )

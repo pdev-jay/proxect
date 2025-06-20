@@ -1,31 +1,39 @@
 package com.pdevjay.proxect.di
 
 import com.pdevjay.proxect.data.usecase.AddCommentUseCaseImpl
+import com.pdevjay.proxect.data.usecase.AddTodoUseCaseImpl
 import com.pdevjay.proxect.data.usecase.DeleteCommentUseCaseImpl
 import com.pdevjay.proxect.data.usecase.DeleteProjectUseCaseImpl
+import com.pdevjay.proxect.data.usecase.DeleteTodoUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetAllProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetCommentsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetFutureProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetPastProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetProjectsForHomeUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetProjectsUseCaseImpl
+import com.pdevjay.proxect.data.usecase.GetTodosUseCaseImpl
 import com.pdevjay.proxect.data.usecase.InsertProjectUseCaseImpl
 import com.pdevjay.proxect.data.usecase.UpdateCommentUseCaseImpl
 import com.pdevjay.proxect.data.usecase.UpdateProjectUseCaseImpl
+import com.pdevjay.proxect.data.usecase.UpdateTodoUseCaseImpl
 import com.pdevjay.proxect.domain.repository.ProjectRepository
 import com.pdevjay.proxect.domain.usecase.AddCommentUseCase
+import com.pdevjay.proxect.domain.usecase.AddTodoUseCase
 import com.pdevjay.proxect.domain.usecase.DeleteCommentUseCase
 import com.pdevjay.proxect.domain.usecase.DeleteProjectUseCase
+import com.pdevjay.proxect.domain.usecase.DeleteTodoUseCase
 import com.pdevjay.proxect.domain.usecase.GetAllProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetCommentsUseCase
 import com.pdevjay.proxect.domain.usecase.GetFutureProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetPastProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetProjectsForHomeUseCase
 import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
+import com.pdevjay.proxect.domain.usecase.GetTodosUseCase
 import com.pdevjay.proxect.domain.usecase.InsertProjectUseCase
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
 import com.pdevjay.proxect.domain.usecase.UpdateCommentUseCase
 import com.pdevjay.proxect.domain.usecase.UpdateProjectUseCase
+import com.pdevjay.proxect.domain.usecase.UpdateTodoUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -96,6 +104,26 @@ object UseCaseModule {
     ): UpdateCommentUseCase = UpdateCommentUseCaseImpl(repo)
 
     @Provides
+    fun provideGetTodosUseCase(
+        repo: ProjectRepository
+    ): GetTodosUseCase = GetTodosUseCaseImpl(repo)
+
+    @Provides
+    fun provideAddTodoUseCase(
+        repo: ProjectRepository
+    ): AddTodoUseCase = AddTodoUseCaseImpl(repo)
+
+    @Provides
+    fun provideDeleteTodoUseCase(
+        repo: ProjectRepository
+    ): DeleteTodoUseCase = DeleteTodoUseCaseImpl(repo)
+
+    @Provides
+    fun provideUpdateTodoUseCase(
+        repo: ProjectRepository
+    ): UpdateTodoUseCase = UpdateTodoUseCaseImpl(repo)
+
+    @Provides
     fun provideProjectUseCases(
         getProjectsForHome: GetProjectsForHomeUseCase,
         getProjects: GetProjectsUseCase,
@@ -108,7 +136,11 @@ object UseCaseModule {
         addComment: AddCommentUseCase,
         getComments: GetCommentsUseCase,
         deleteComment: DeleteCommentUseCase,
-        updateComment: UpdateCommentUseCase
+        updateComment: UpdateCommentUseCase,
+        getTodos: GetTodosUseCase,
+        addTodo: AddTodoUseCase,
+        deleteTodo: DeleteTodoUseCase,
+        updateTodo: UpdateTodoUseCase
     ): ProjectUseCases {
         return ProjectUseCases(
             getProjectsForHome = getProjectsForHome,
@@ -122,7 +154,11 @@ object UseCaseModule {
             addComment = addComment,
             getComments = getComments,
             deleteComment = deleteComment,
-            updateComment = updateComment
+            updateComment = updateComment,
+            getTodos = getTodos,
+            addTodo = addTodo,
+            deleteTodo = deleteTodo,
+            updateTodo = updateTodo
         )
     }
 

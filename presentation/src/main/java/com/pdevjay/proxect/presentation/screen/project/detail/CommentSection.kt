@@ -141,7 +141,6 @@ fun CommentCard(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .fillMaxHeight(0.9f)
                     .clip(RoundedCornerShape(16.dp)),
                 tonalElevation = 8.dp,
                 color = MaterialTheme.colorScheme.surface

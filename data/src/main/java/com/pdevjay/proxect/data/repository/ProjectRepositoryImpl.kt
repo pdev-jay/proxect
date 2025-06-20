@@ -2,10 +2,12 @@ package com.pdevjay.proxect.data.repository
 
 import com.pdevjay.proxect.data.remote.CommentDto
 import com.pdevjay.proxect.data.remote.ProjectDto
+import com.pdevjay.proxect.data.remote.TodoDto
 import com.pdevjay.proxect.data.remote.toDomain
 import com.pdevjay.proxect.data.remote.toDto
 import com.pdevjay.proxect.domain.model.Comment
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.model.Todo
 import com.pdevjay.proxect.domain.repository.ProjectRepository
 import com.pdevjay.proxect.domain.utils.toEpochMillis
 import io.github.jan.supabase.SupabaseClient
@@ -219,6 +221,58 @@ class ProjectRepositoryImpl @Inject constructor(
             }
         }
 
+    }
+
+    override suspend fun getTodos(projectId: String): List<Todo> {
+        return supabase
+            .from("todos")
+            .select {
+                filter {
+                    eq("project_id", projectId)
+                }
+            }
+            .decodeList<TodoDto>()
+            .map { it.toDomain() }
+    }
+
+    override suspend fun addTodo(projectId: String, title: String, isDone: Boolean) {
+        supabase
+            .from("todos")
+            .insert(
+                TodoDto(
+                    projectId = projectId,
+                    title = title,
+                    isDone = isDone
+                )
+            )
+    }
+
+    override suspend fun deleteTodo(todoId: String, projectId: String) {
+        supabase.from("todos").delete {
+            filter {
+                eq("id", todoId)
+                eq("project_id", projectId)
+            }
+        }
+    }
+
+    override suspend fun updateTodo(
+        projectId: String,
+        todoId: String,
+        title: String,
+        isDone: Boolean
+    ) {
+        supabase.from("todos").update(
+            {
+                set("title", title)
+                set("is_done", isDone)
+            }
+        ) {
+            filter {
+                eq("id", todoId)
+                eq("project_id", projectId)
+            }
+        }
     }
 
 

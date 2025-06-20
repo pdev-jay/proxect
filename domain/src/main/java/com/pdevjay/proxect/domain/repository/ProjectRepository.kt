@@ -2,6 +2,7 @@ package com.pdevjay.proxect.domain.repository
 
 import com.pdevjay.proxect.domain.model.Comment
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.model.Todo
 import java.time.LocalDate
 
 interface ProjectRepository {
@@ -28,6 +29,8 @@ interface ProjectRepository {
     suspend fun deleteComment(projectId: String, commentId: String)
     suspend fun updateComment(projectId: String, commentId: String, content: String)
 
-//    suspend fun deleteComment(id: String)
-//    suspend fun updateComment(comment: Comment)
+    suspend fun getTodos(projectId: String): List<Todo>
+    suspend fun addTodo(projectId: String, title: String, isDone: Boolean)
+    suspend fun deleteTodo(todoId: String, projectId: String)
+    suspend fun updateTodo(projectId: String, todoId: String, title: String, isDone: Boolean)
 }

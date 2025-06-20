@@ -8,6 +8,7 @@ import com.pdevjay.proxect.domain.model.Project
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
 import com.pdevjay.proxect.presentation.data.CommentForPresentation
 import com.pdevjay.proxect.presentation.data.ProjectForPresentation
+import com.pdevjay.proxect.presentation.data.TodoForPresentation
 import com.pdevjay.proxect.presentation.data.toDomain
 import com.pdevjay.proxect.presentation.data.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,9 @@ class ProjectViewModel @Inject constructor(
 
     private val _comments = MutableStateFlow<List<CommentForPresentation>>(emptyList())
     val comments: StateFlow<List<CommentForPresentation>> = _comments.asStateFlow()
+
+    private val _todos = MutableStateFlow<List<TodoForPresentation>>(emptyList())
+    val todos: StateFlow<List<TodoForPresentation>> = _todos.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -225,5 +229,101 @@ class ProjectViewModel @Inject constructor(
         }
     }
 
+    fun getTodos(
+        projectId: String,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    _todos.value = useCases.getTodos(projectId).map { it.toPresentation() }
+                    emit(UseCaseResult.Success(todos))
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("할 일 불러오기 실패", e))
+                }
+            }.handleUseCaseResult(
+                onSuccess = { onSuccess() },
+                onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                onComplete = onComplete
+            )
+        }
+    }
 
+    fun addTodo(
+        projectId: String,
+        content: String,
+        isDone: Boolean = false,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    useCases.addTodo(projectId, content, isDone)
+                    emit(UseCaseResult.Success(Unit))
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("할 일 추가 실패", e))
+                }
+            }
+                .handleUseCaseResult(
+                    onSuccess = { onSuccess() },
+                    onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                    onComplete = onComplete
+                )
+        }
+    }
+
+    fun deleteTodo(
+        todoId: String,
+        projectId: String,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    useCases.deleteTodo(todoId, projectId)
+                    emit(UseCaseResult.Success(Unit))
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("할 일 삭제 실패", e))
+                }
+
+            }
+                .handleUseCaseResult(
+                    onSuccess = { onSuccess() },
+                    onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                    onComplete = onComplete
+                )
+        }
+    }
+
+    fun updateTodo(
+        projectId: String,
+        todoId: String,
+        title: String,
+        isDone: Boolean,
+        onSuccess: () -> Unit,
+        onFailure: (message: String, throwable: Throwable?) -> Unit,
+        onComplete: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    useCases.updateTodo(projectId, todoId, title, isDone)
+                    emit(UseCaseResult.Success(Unit))
+                } catch (e: Exception) {
+                    emit(UseCaseResult.Failure("할 일 수정 실패", e))
+                }
+            }
+                .handleUseCaseResult(
+                    onSuccess = { onSuccess() },
+                    onFailure = { error -> onFailure(error.message ?: "", error.throwable) },
+                    onComplete = onComplete
+                )
+        }
+    }
 }

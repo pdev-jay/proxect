@@ -21,3 +21,11 @@ fun TodoDto.toDomain(): Todo = Todo(
     isDone = isDone,
     createdAt = createdAt?.let { Instant.parse(it) } ?: Instant.EPOCH
 )
+
+fun Todo.toDto(): TodoDto = TodoDto(
+    id = id,
+    projectId = projectId,
+    title = title,
+    isDone = isDone,
+    createdAt = createdAt.toString()
+)
