@@ -8,7 +8,8 @@ import androidx.compose.runtime.Composable
 
 enum class TargetType(val label: String) {
     PROJECT("프로젝트"),
-    COMMENT("댓글")
+    COMMENT("댓글"),
+    TODO("할 일")
 }
 
 

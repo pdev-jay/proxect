@@ -165,6 +165,7 @@ class ProjectViewModel @Inject constructor(
             flow {
                 try {
                     val comments = useCases.getComments(projectId).map { it.toPresentation() }
+                        .sortedBy { it.createdAt }
                     _comments.value = comments
                     emit(UseCaseResult.Success(Unit))
 
@@ -239,6 +240,7 @@ class ProjectViewModel @Inject constructor(
             flow {
                 try {
                     _todos.value = useCases.getTodos(projectId).map { it.toPresentation() }
+                        .sortedBy { it.createdAt }
                     emit(UseCaseResult.Success(todos))
                 } catch (e: Exception) {
                     emit(UseCaseResult.Failure("할 일 불러오기 실패", e))

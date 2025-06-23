@@ -52,6 +52,7 @@ fun ProjectDetailScreen(
 
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
     var showTodoDialog by remember { mutableStateOf(false) }
+    var showCommentSection by remember { mutableStateOf(false) }
     var commentContent by remember { mutableStateOf("") }
     val setTopBar = LocalTopBarSetter.current
 
@@ -103,7 +104,11 @@ fun ProjectDetailScreen(
     }
     if (project != null) {
         Column(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .padding(8.dp)
+//                .verticalScroll(rememberScrollState())
+            ,
+
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text("프로젝트", style = MaterialTheme.typography.titleMedium)
@@ -118,16 +123,19 @@ fun ProjectDetailScreen(
                 )
             }
             HorizontalDivider(color = Color.LightGray)
+
             Spacer(modifier = Modifier)
             Text("기간", style = MaterialTheme.typography.titleMedium)
             Text("${project!!.startDate.toUTCLocalDate()} - ${project!!.endDate.toUTCLocalDate()}")
             HorizontalDivider(color = Color.LightGray)
+
             Spacer(modifier = Modifier)
+            Text("내용", style = MaterialTheme.typography.titleMedium)
             Text(project!!.description)
-            Spacer(modifier = Modifier)
+            HorizontalDivider(color = Color.LightGray)
 
             // Todos
-            HorizontalDivider(color = Color.LightGray)
+            Spacer(modifier = Modifier)
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -156,13 +164,34 @@ fun ProjectDetailScreen(
                     }
                 }
 
+
             }
 
             // Comments
             HorizontalDivider(color = Color.LightGray)
-            Text("Comments", style = MaterialTheme.typography.titleMedium)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Comments", style = MaterialTheme.typography.titleMedium)
+                TextButton(
+                    onClick = {
+                        showCommentSection = true
+                    }
+                ) {
+                    Text("show comments")
+                }
+            }
+
+        }
+
+        if (showCommentSection) {
             CommentSection(
                 comments,
+                onDismiss = {
+                    showCommentSection = false
+                },
                 onAddComment = { newComment ->
                     commentContent = newComment
                     if (commentContent != "") {
@@ -277,6 +306,21 @@ fun ProjectDetailScreen(
                             )
                         }
 
+                    )
+                },
+                onUpdateTodo = { todoId, projectId, newContent, isDone ->
+                    projectViewModel.updateTodo(todoId, projectId, newContent, isDone,
+                        onSuccess = {},
+                        onFailure = { message, throwable ->
+                        },
+                        onComplete = {
+                            projectViewModel.getTodos(
+                                project!!.id,
+                                onSuccess = {},
+                                onFailure = { _, _ -> },
+                                onComplete = {}
+                            )
+                        }
                     )
                 }
             )
