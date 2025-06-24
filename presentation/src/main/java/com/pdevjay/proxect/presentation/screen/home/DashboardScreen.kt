@@ -232,7 +232,7 @@ fun DashboardScreen(
                             modifier = Modifier.padding(8.dp),
                             text = "${filter.displayName}",
                             style = MaterialTheme.typography.labelMedium,
-                            color = Color.Black.copy(alpha = 0.8f)
+//                            color = Color.Black.copy(alpha = 0.8f)
                         )
                     }
                 }

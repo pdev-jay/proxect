@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
@@ -45,6 +47,10 @@ import com.pdevjay.proxect.presentation.screen.project.component.ConfirmDeleteDi
 import com.pdevjay.proxect.presentation.screen.project.component.ConfirmEditCancelDialog
 import com.pdevjay.proxect.presentation.screen.project.component.TargetType
 import kotlinx.coroutines.launch
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+
 
 @Composable
 fun CommentSection(
@@ -72,6 +78,19 @@ fun CommentSection(
             Column(
                 modifier = Modifier.padding(8.dp)
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "댓글",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, contentDescription = "Close Dialog")
+                    }
+                }
                 // 댓글 입력창
                 Row(
                     modifier = Modifier
@@ -132,6 +151,8 @@ fun CommentCard(
     val originalCommentContent = comment.content
     var commentContent by remember { mutableStateOf(comment.content) }
 
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.getDefault())
+
     val coroutineScope = rememberCoroutineScope()
 
     val swipeState = remember {
@@ -151,11 +172,13 @@ fun CommentCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
+                    modifier = Modifier.size(48.dp),
                     onClick = { showDeleteDialog = true },
                 ) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete Comment")
                 }
                 IconButton(
+                    modifier = Modifier.size(48.dp),
                     onClick = { showDialog = true },
                 ) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit Comment")
@@ -180,10 +203,25 @@ fun CommentCard(
                         .padding(12.dp)
                 ) {
                     val authorText = comment.author ?: "Unknown Author"
-                    Text(
-                        text = authorText,
-                        style = MaterialTheme.typography.labelSmall
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+
+                        Text(
+                            text = authorText,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                        Text(
+                            comment.createdAt
+                                ?.atZone(ZoneId.systemDefault())
+                                ?.toLocalDateTime()
+                                ?.format(formatter) ?: "Unknown",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Gray
+                        )
+
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(comment.content, style = MaterialTheme.typography.bodyMedium)
                 }

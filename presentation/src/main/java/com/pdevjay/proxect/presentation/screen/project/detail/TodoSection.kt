@@ -17,11 +17,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
@@ -82,6 +84,20 @@ fun TodoSection(
                 modifier = Modifier.padding(8.dp)
             ) {
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+
+                ) {
+                    Text(
+                        text = "할 일",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, contentDescription = "Close Dialog")
+                    }
+                }
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
@@ -138,7 +154,6 @@ fun TodoCard(
 
     val originalTodoContent = todo.title
     var todoContent by remember { mutableStateOf(todo.title) }
-    var isDone by remember { mutableStateOf(todo.isDone) }
     var showDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditCancelDialog by remember { mutableStateOf(false) }
@@ -160,11 +175,13 @@ fun TodoCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
+                    modifier = Modifier.size(48.dp),
                     onClick = { showDeleteDialog = true },
                 ) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete Comment")
                 }
                 IconButton(
+                    modifier = Modifier.size(48.dp),
                     onClick = { showDialog = true },
                 ) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit Comment")

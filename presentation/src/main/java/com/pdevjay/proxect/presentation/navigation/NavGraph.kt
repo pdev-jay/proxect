@@ -289,7 +289,6 @@ fun MainNavHost(
                 }) { backStackEntry ->
                 ProjectSearchScreen(
                     navController = navController,
-                    projectListViewModel = projectListViewModel
                 )
             }
         }
