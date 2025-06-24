@@ -56,7 +56,12 @@ fun DatePickerDialogWrapper(
             showModeToggle = false,
             title = {
                 Box(
-                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+                    modifier = Modifier.padding(
+                        top = 12.dp,
+                        bottom = 4.dp,
+                        start = 16.dp,
+                        end = 16.dp
+                    )
                 ) {
                     Text(
                         text = "Select date range"

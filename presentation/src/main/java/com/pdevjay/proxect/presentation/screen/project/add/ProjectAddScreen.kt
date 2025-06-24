@@ -57,14 +57,7 @@ fun ProjectAddScreen(
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
-    /**
-     * 현지 날짜 기준 시작 날짜 utc
-     */
     var startDate by remember { mutableStateOf(LocalDate.now().toEpochMillis()) }
-
-    /**
-     * 현지 날짜 기준 끝 날짜 utc
-     */
     var endDate by remember { mutableStateOf(LocalDate.now().toEpochMillis()) }
 
     var showDatePicker by remember { mutableStateOf(false) }

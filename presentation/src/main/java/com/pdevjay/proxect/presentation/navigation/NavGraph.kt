@@ -17,13 +17,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.pdevjay.proxect.presentation.screen.calendar.CalendarScreen
 import com.pdevjay.proxect.presentation.screen.home.DashboardScreen
-import com.pdevjay.proxect.presentation.screen.lists.ProjectListViewModel
-import com.pdevjay.proxect.presentation.screen.lists.ProjectSearchScreen
 import com.pdevjay.proxect.presentation.screen.project.ProjectViewModel
 import com.pdevjay.proxect.presentation.screen.project.add.ProjectAddScreen
 import com.pdevjay.proxect.presentation.screen.project.detail.ProjectDetailScreen
 import com.pdevjay.proxect.presentation.screen.project.edit.ProjectEditScreen
 import com.pdevjay.proxect.presentation.screen.project.list.ProjectListScreen
+import com.pdevjay.proxect.presentation.screen.search.ProjectSearchScreen
 import com.pdevjay.proxect.presentation.screen.settings.SettingsScreen
 
 
@@ -33,7 +32,6 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
 ) {
     val projectViewModel: ProjectViewModel = hiltViewModel()
-    val projectListViewModel: ProjectListViewModel = hiltViewModel()
     NavHost(
         navController = navController,
         modifier = modifier,
@@ -287,8 +285,78 @@ fun MainNavHost(
                         slideOutToRight()
                     }
                 }) { backStackEntry ->
+                val parentEntry =
+                    remember(backStackEntry) { navController.getBackStackEntry<SearchGraph>() }
+                val navSharedViewModel: NavSharedViewModel = hiltViewModel(parentEntry)
+
                 ProjectSearchScreen(
-                    navController = navController,
+                    navSharedViewModel = navSharedViewModel,
+                    onNavigateToProjectDetail = {
+                        navController.navigate(ProjectDetailSearch)
+                    }
+                )
+            }
+
+            composable<ProjectDetailSearch>(
+                enterTransition = {
+                    val from = initialState.destination.route.orEmpty()
+                    val to = targetState.destination.route.orEmpty()
+
+                    if (from.startsWith(ProjectEditSearch.serializer().descriptor.serialName) && to.startsWith(
+                            ProjectDetailSearch.serializer().descriptor.serialName
+                        )
+                    ) {
+                        slideInFromLeft()
+                    } else {
+                        slideInFromRight()
+                    }
+
+                },
+                exitTransition = {
+                    val from = initialState.destination.route.orEmpty()
+                    val to = targetState.destination.route.orEmpty()
+
+                    if (from.startsWith(ProjectDetailSearch.serializer().descriptor.serialName) && to.startsWith(
+                            ProjectEditSearch.serializer().descriptor.serialName
+                        )
+                    ) {
+                        slideOutToLeft()
+                    } else {
+                        slideOutToRight()
+                    }
+                }
+            ) { backStackEntry -> // 타입으로 라우트 정의
+                val parentEntry =
+                    remember(backStackEntry) { navController.getBackStackEntry<SearchGraph>() }
+                val navSharedViewModel: NavSharedViewModel = hiltViewModel(parentEntry)
+
+                ProjectDetailScreen(
+                    navSharedViewModel = navSharedViewModel,
+                    projectViewModel = projectViewModel,
+                    onNavigateToEdit = {
+                        navController.navigate(ProjectEditSearch)
+                    },
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable<ProjectEditSearch>(
+                enterTransition = { slideInFromRight() },
+                exitTransition = { slideOutToRight() }
+
+            ) { backStackEntry -> // 타입으로 라우트 정의
+                val parentEntry =
+                    remember(backStackEntry) { navController.getBackStackEntry<SearchGraph>() }
+                val navSharedViewModel: NavSharedViewModel = hiltViewModel(parentEntry)
+
+                ProjectEditScreen(
+                    navSharedViewModel = navSharedViewModel,
+                    projectViewModel = projectViewModel,
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

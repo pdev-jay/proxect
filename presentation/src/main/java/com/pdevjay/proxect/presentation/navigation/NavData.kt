@@ -37,6 +37,12 @@ data object SearchGraph
 data object Search
 
 @Serializable
+data object ProjectDetailSearch
+
+@Serializable
+data object ProjectEditSearch
+
+@Serializable
 data object SettingsGraph
 
 @Serializable
