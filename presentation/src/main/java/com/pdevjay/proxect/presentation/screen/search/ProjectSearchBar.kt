@@ -25,11 +25,12 @@ import androidx.compose.ui.semantics.traversalIndex
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProjectSearchBar(
+    initialQuery: String = "",
     isSearchBarActive: MutableState<Boolean>,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
 ) {
-    var searchQuery by remember { mutableStateOf("") }
+    var searchQuery by remember { mutableStateOf(initialQuery) }
 
     DockedSearchBar(
         modifier = Modifier

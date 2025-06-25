@@ -62,11 +62,12 @@ fun ProjectSearchScreen(
     val isDateFilterActive = searchState.isDateFilterActive
     val startDate = searchState.startDate
     val endDate = searchState.endDate
+    val selectedStatus = searchState.selectedStatus
 
     val isSearchBarActive = rememberSaveable { mutableStateOf(false) }
     var showStatusSelector by remember { mutableStateOf(false) }
     val statusOptions = listOf(null) + ProjectStatus.entries.toList()
-    var selectedStatus by remember { mutableStateOf<ProjectStatus?>(null) }
+//    var selectedStatus by remember { mutableStateOf<ProjectStatus?>(null) }
 
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -84,14 +85,16 @@ fun ProjectSearchScreen(
     }
 
     LaunchedEffect(Unit) {
-        projectSearchViewModel.searchProjectsWithDates(
-            startDate = LocalDate.now().minusWeeks(2),
-            endDate = LocalDate.now().plusWeeks(2),
-            onSuccess = {},
-            onFailure = { message, throwable ->
-            },
-            onComplete = {}
-        )
+        if (searchedProjects.isEmpty()) {
+            projectSearchViewModel.searchProjectsWithDates(
+                startDate = LocalDate.now().minusWeeks(2),
+                endDate = LocalDate.now().plusWeeks(2),
+                onSuccess = {},
+                onFailure = { message, throwable ->
+                },
+                onComplete = {}
+            )
+        }
     }
 
     Column(
@@ -108,6 +111,7 @@ fun ProjectSearchScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProjectSearchBar(
+            initialQuery = searchState.searchQuery,
             isSearchBarActive = isSearchBarActive,
             onSearch = { query ->
 
@@ -162,7 +166,7 @@ fun ProjectSearchScreen(
                                             isStatusFilterActive = true,
                                             projectStatus = status
                                         )
-                                        selectedStatus = status
+//                                        selectedStatus = status
                                     }
                                     showStatusSelector = false
                                 }
