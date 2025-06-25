@@ -13,6 +13,7 @@ import com.pdevjay.proxect.data.usecase.GetProjectsForHomeUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.GetTodosUseCaseImpl
 import com.pdevjay.proxect.data.usecase.InsertProjectUseCaseImpl
+import com.pdevjay.proxect.data.usecase.SearchProjectsUseCaseImpl
 import com.pdevjay.proxect.data.usecase.UpdateCommentUseCaseImpl
 import com.pdevjay.proxect.data.usecase.UpdateProjectUseCaseImpl
 import com.pdevjay.proxect.data.usecase.UpdateTodoUseCaseImpl
@@ -31,6 +32,7 @@ import com.pdevjay.proxect.domain.usecase.GetProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.GetTodosUseCase
 import com.pdevjay.proxect.domain.usecase.InsertProjectUseCase
 import com.pdevjay.proxect.domain.usecase.ProjectUseCases
+import com.pdevjay.proxect.domain.usecase.SearchProjectsUseCase
 import com.pdevjay.proxect.domain.usecase.UpdateCommentUseCase
 import com.pdevjay.proxect.domain.usecase.UpdateProjectUseCase
 import com.pdevjay.proxect.domain.usecase.UpdateTodoUseCase
@@ -124,6 +126,11 @@ object UseCaseModule {
     ): UpdateTodoUseCase = UpdateTodoUseCaseImpl(repo)
 
     @Provides
+    fun provideSearchProjectsUseCase(
+        repo: ProjectRepository
+    ): SearchProjectsUseCase = SearchProjectsUseCaseImpl(repo)
+
+    @Provides
     fun provideProjectUseCases(
         getProjectsForHome: GetProjectsForHomeUseCase,
         getProjects: GetProjectsUseCase,
@@ -140,7 +147,8 @@ object UseCaseModule {
         getTodos: GetTodosUseCase,
         addTodo: AddTodoUseCase,
         deleteTodo: DeleteTodoUseCase,
-        updateTodo: UpdateTodoUseCase
+        updateTodo: UpdateTodoUseCase,
+        searchProjects: SearchProjectsUseCase
     ): ProjectUseCases {
         return ProjectUseCases(
             getProjectsForHome = getProjectsForHome,
@@ -158,7 +166,8 @@ object UseCaseModule {
             getTodos = getTodos,
             addTodo = addTodo,
             deleteTodo = deleteTodo,
-            updateTodo = updateTodo
+            updateTodo = updateTodo,
+            searchProjects = searchProjects
         )
     }
 

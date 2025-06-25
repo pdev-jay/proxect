@@ -2,6 +2,7 @@ package com.pdevjay.proxect.domain.repository
 
 import com.pdevjay.proxect.domain.model.Comment
 import com.pdevjay.proxect.domain.model.Project
+import com.pdevjay.proxect.domain.model.ProjectStatus
 import com.pdevjay.proxect.domain.model.Todo
 import java.time.LocalDate
 
@@ -33,4 +34,13 @@ interface ProjectRepository {
     suspend fun addTodo(projectId: String, title: String, isDone: Boolean)
     suspend fun deleteTodo(todoId: String, projectId: String)
     suspend fun updateTodo(projectId: String, todoId: String, title: String, isDone: Boolean)
+
+    suspend fun searchProjects(
+        query: String,
+        isStatusFilterActive: Boolean,
+        status: ProjectStatus?,
+        isDateFilterActive: Boolean,
+        startDate: Long?,
+        endDate: Long?
+    ): List<Project>?
 }

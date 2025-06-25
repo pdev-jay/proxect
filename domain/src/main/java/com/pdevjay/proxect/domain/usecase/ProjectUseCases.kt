@@ -19,4 +19,6 @@ data class ProjectUseCases(
     val addTodo: AddTodoUseCase,
     val deleteTodo: DeleteTodoUseCase,
     val updateTodo: UpdateTodoUseCase,
+
+    val searchProjects: SearchProjectsUseCase
 )

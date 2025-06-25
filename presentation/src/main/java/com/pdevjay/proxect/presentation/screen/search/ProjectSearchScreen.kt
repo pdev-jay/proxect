@@ -1,5 +1,6 @@
 package com.pdevjay.proxect.presentation.screen.search
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -53,17 +54,21 @@ fun ProjectSearchScreen(
     onNavigateToProjectDetail: () -> Unit = {},
 ) {
     val searchedProjects by projectSearchViewModel.searchedProjects.collectAsState()
-    val isSearchBarActive = rememberSaveable { mutableStateOf(false) }
 
-    var isStatusFilterActive by remember { mutableStateOf(false) }
+    val searchState by projectSearchViewModel.searchState.collectAsState()
+
+
+    val isStatusFilterActive = searchState.isStatusFilterActive
+    val isDateFilterActive = searchState.isDateFilterActive
+    val startDate = searchState.startDate
+    val endDate = searchState.endDate
+
+    val isSearchBarActive = rememberSaveable { mutableStateOf(false) }
     var showStatusSelector by remember { mutableStateOf(false) }
     val statusOptions = listOf(null) + ProjectStatus.entries.toList()
     var selectedStatus by remember { mutableStateOf<ProjectStatus?>(null) }
 
-    var isDateFilterActive by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var startDate by remember { mutableStateOf(LocalDate.now().minusWeeks(2).toEpochMillis()) }
-    var endDate by remember { mutableStateOf(LocalDate.now().plusWeeks(2).toEpochMillis()) }
 
     val setTopBar = LocalTopBarSetter.current
 
@@ -104,8 +109,13 @@ fun ProjectSearchScreen(
     ) {
         ProjectSearchBar(
             isSearchBarActive = isSearchBarActive,
-            onSearch = {},
-            onQueryChange = {}
+            onSearch = { query ->
+
+                projectSearchViewModel.updateSearchState(searchQuery = query)
+            },
+            onQueryChange = { query ->
+                projectSearchViewModel.updateSearchState(searchQuery = query)
+            }
         )
 
         Row(
@@ -121,7 +131,8 @@ fun ProjectSearchScreen(
                 Checkbox(
                     checked = isStatusFilterActive,
                     onCheckedChange = {
-                        isStatusFilterActive = !isStatusFilterActive
+                        projectSearchViewModel.updateSearchState(isStatusFilterActive = !isStatusFilterActive)
+//                        isStatusFilterActive = !isStatusFilterActive
                     }
                 )
                 Box {
@@ -147,6 +158,10 @@ fun ProjectSearchScreen(
                                 text = { Text(status?.displayName ?: "모든 상태") },
                                 onClick = {
                                     if (selectedStatus != status) {
+                                        projectSearchViewModel.updateSearchState(
+                                            isStatusFilterActive = true,
+                                            projectStatus = status
+                                        )
                                         selectedStatus = status
                                     }
                                     showStatusSelector = false
@@ -166,7 +181,9 @@ fun ProjectSearchScreen(
                 Checkbox(
                     checked = isDateFilterActive,
                     onCheckedChange = {
-                        isDateFilterActive = !isDateFilterActive
+                        projectSearchViewModel.updateSearchState(isDateFilterActive = !isDateFilterActive)
+
+//                        isDateFilterActive = !isDateFilterActive
                     }
                 )
                 TextButton(
@@ -190,17 +207,30 @@ fun ProjectSearchScreen(
             padding = 8.dp,
             modifier = Modifier.fillMaxSize()
         ) {
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(searchedProjects) { project ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
+            AnimatedContent(
+                targetState = searchedProjects
+            ) { projects ->
+                if (projects.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        ProjectCard(project) {
-                            navSharedViewModel.setProject(project)
-                            onNavigateToProjectDetail()
+                        Text("검색 결과가 없습니다.")
+                    }
+                } else {
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        items(projects) { project ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                ProjectCard(project) {
+                                    navSharedViewModel.setProject(project)
+                                    onNavigateToProjectDetail()
+                                }
+                            }
                         }
                     }
                 }
@@ -213,15 +243,10 @@ fun ProjectSearchScreen(
             initialEndDate = endDate,
             onDismiss = { showDatePicker = false },
             onDateRangeSelected = {
-                startDate = it.first ?: LocalDate.now().toEpochMillis()
-                endDate = it.second ?: startDate
-
-                projectSearchViewModel.searchProjectsWithDates(
-                    startDate = startDate.toUTCLocalDate(),
-                    endDate = endDate.toUTCLocalDate(),
-                    onSuccess = {},
-                    onFailure = { message, throwable -> },
-                    onComplete = {})
+                projectSearchViewModel.updateSearchState(
+                    startDate = it.first ?: LocalDate.now().toEpochMillis(),
+                    endDate = it.second ?: startDate
+                )
             }
         )
     }
